@@ -1,12 +1,11 @@
 import React from "react";
 import { Space as AntdSpace } from "antd";
-import { useDrop } from "@/editor/layouts/hooks";
+import { useDrop } from "@/editor/hooks";
 import { CommonComponentProps } from "@editor/interface";
 
 const Space: React.FC<CommonComponentProps> = (props) => {
-  const { children, _id } = props;
-
-  const { drop, canDrop } = useDrop(_id);
+  const { children, _id, _name } = props;
+  const { drop, canDrop } = useDrop(_id, _name);
 
   return (
     <AntdSpace

@@ -1,18 +1,18 @@
-import { useDrop as useDndDrop } from 'react-dnd';
-import { ItemType } from "@/editor/item-type";
+import { useDrop as useDndDrop } from "react-dnd";
+import { getAcceptDrop } from "@editor/utils";
 
- const useDrop = (id: string) => {
+const useDrop = (id: string, componentName: string) => {
   const [{ canDrop }, drop] = useDndDrop(() => ({
-    accept: [ItemType.Space, ItemType.Button],
+    accept: getAcceptDrop(componentName),
     drop: (_, monitor) => {
-      const didDrop = monitor.didDrop()
+      const didDrop = monitor.didDrop();
       if (didDrop) {
         return;
       }
       // 这里把当前组件的id返回出去，在拖拽结束事件里可以拿到这个id。
       return {
         id,
-      }
+      };
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
@@ -20,11 +20,10 @@ import { ItemType } from "@/editor/item-type";
     }),
   }));
 
-
   return {
     drop,
     canDrop,
-  }
-}
+  };
+};
 
 export default useDrop;

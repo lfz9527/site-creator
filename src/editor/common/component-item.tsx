@@ -1,5 +1,6 @@
 import { useDrag } from "react-dnd";
 import { ItemType } from "@editor/item-type";
+import { ComType } from "@editor/interface";
 import React from "react";
 
 interface ComponentItemProps {
@@ -9,13 +10,15 @@ interface ComponentItemProps {
   description: string;
   // 拖拽结束回调
   onDragEnd: any;
+  // 组件图标
+  icon?: string;
+  // 组件类型
+  comType: ComType;
 }
 
-const ComponentItem: React.FC<ComponentItemProps> = ({
-  name,
-  description,
-  onDragEnd,
-}) => {
+const ComponentItem: React.FC<ComponentItemProps> = (props) => {
+  const { name, description, onDragEnd, comType } = props;
+
   const [{ isDragging }, drag] = useDrag({
     type: name,
     end: (_, monitor) => {
@@ -24,10 +27,9 @@ const ComponentItem: React.FC<ComponentItemProps> = ({
       if (onDragEnd) {
         const option = {
           name,
-          props: name === ItemType.Button? { children: "按钮" } : {},
+          props: name === ItemType.Button ? { children: "按钮" } : {},
           ...dropResult,
-        }
-        console.log('dropResult-----',dropResult);
+        };
         // 拖拽结束回调
         onDragEnd(option);
       }

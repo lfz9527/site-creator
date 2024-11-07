@@ -1,3 +1,9 @@
+export interface Context {
+  registerComponent: (name: string, componentConfig: ComponentConfig) => void;
+}
+
+export type ComType = "static" | "iframe";
+
 export interface Component {
   /**
    * 组件唯一标识
@@ -10,7 +16,7 @@ export interface Component {
   /**
    * 组件类型
    */
-  type: string;
+  type: ComType;
   /**
    * 组件属性
    */
@@ -23,8 +29,7 @@ export interface Component {
    * 子组件
    */
   children?: Component[];
-} 
-
+}
 
 export interface CommonComponentProps {
   _id: string;
@@ -48,23 +53,15 @@ export interface ComponentConfig {
    */
   icon?: string;
   /**
-   * 组件默认属性
-   */
-  defaultProps?:
-    | {
-        [key: string]: {
-          type: 'iframe' | 'static';
-          value: any;
-        };
-      }
-    | (() => {
-        [key: string]: {
-          type: 'iframe' | 'static';
-          value: any;
-        };
-      });
-  /**
    * 允许放置到哪些组件上
    */
   allowDrag: string[];
+  /**
+   * 对应组件
+   */
+  component: any;
+  /**
+   * 组件类型
+   */
+  comType: ComType;
 }

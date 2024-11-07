@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "antd";
 import Space from "@editor/components/space";
 import { ItemType } from "@/editor/item-type";
@@ -6,6 +6,7 @@ import { Component } from "@editor/interface";
 import { useDrop } from "react-dnd";
 import { useComponents } from "@editor/stores";
 import SelectedMask from "@/editor/common/selected-mask";
+import HoverMask from "@editor/common/hover-mask";
 
 const ComponentMap: { [key: string]: any } = {
   Button: Button,
@@ -16,6 +17,7 @@ const Stage: React.FC = () => {
   const { components, setCurComponentId, curComponentId } = useComponents();
   const containerClassName = "select-mask-container";
   const selectedMaskRef = useRef<any>(null);
+  const [hoverComponentId, setHoverComponentId] = useState();
 
   // 组件改变后，重新渲染遮罩
   useEffect(() => {
@@ -96,6 +98,14 @@ const Stage: React.FC = () => {
           containerClassName={containerClassName}
           offsetContainerIdName={"stage-container"}
           ref={selectedMaskRef}
+        />
+      )}
+      {hoverComponentId && (
+        <HoverMask
+          containerClassName={containerClassName}
+          offsetContainerClassName="stage"
+          ref={selectedMaskRef}
+          componentId={hoverComponentId}
         />
       )}
       <div className={containerClassName} />
