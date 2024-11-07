@@ -28,6 +28,7 @@ const Stage: React.FC = () => {
 
   useEffect(() => {
     const createMask = (e: any) => {
+      e.preventDefault();
       // 获取当前点击的元素
       const path = e.composedPath();
       // 遍历path，找到最近的组件元素
@@ -35,23 +36,65 @@ const Stage: React.FC = () => {
         const el = path[i];
         if (el.getAttribute) {
           if (el.getAttribute("data-component-id")) {
-            const id = el.getAttribute("data-component-id");
-            setCurComponentId(id);
+            const componentId = el.getAttribute("data-component-id");
+            setCurComponentId(componentId);
+            setHoverComponentId(undefined);
+            return;
           }
         }
       }
     };
-    const container = document.querySelector("#stage-container");
+    let container = document.querySelector("#stage-container");
     if (container) {
       container.addEventListener("click", createMask, true);
     }
     return () => {
-      const container = document.querySelector("#stage-container");
+      container = document.querySelector("#stage-container");
       if (container) {
         container.removeEventListener("click", createMask, true);
       }
     };
   }, []);
+
+  useEffect(() => {
+    function createMask(e: any) {
+      // 获取当前点击的元素
+      const path = e.composedPath();
+
+      for (let i = 0; i < path.length; i += 1) {
+        const ele = path[i];
+        if (ele.getAttribute && ele.getAttribute("data-component-id")) {
+          const componentId = ele.getAttribute("data-component-id");
+          if (componentId) {
+            if (curComponentId === componentId) {
+              setHoverComponentId(undefined);
+            } else {
+              setHoverComponentId(componentId);
+            }
+            return;
+          }
+        }
+      }
+    }
+
+    function removerMask() {
+      setHoverComponentId(undefined);
+    }
+
+    let container = document.querySelector("#stage-container");
+
+    if (container) {
+      container.addEventListener("mouseover", createMask, true);
+      container.addEventListener("mouseleave", removerMask);
+    }
+    return () => {
+      container = document.querySelector(".stage");
+      if (container) {
+        container.removeEventListener("mouseover", createMask, true);
+        container.removeEventListener("mouseleave", removerMask);
+      }
+    };
+  }, [curComponentId]);
 
   // 渲染组件
   const renderComponents = (components: Component[]): React.ReactNode => {
@@ -103,7 +146,7 @@ const Stage: React.FC = () => {
       {hoverComponentId && (
         <HoverMask
           containerClassName={containerClassName}
-          offsetContainerClassName="stage"
+          offsetContainerIdName={"stage-container"}
           ref={selectedMaskRef}
           componentId={hoverComponentId}
         />
