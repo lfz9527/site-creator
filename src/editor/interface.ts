@@ -29,6 +29,10 @@ export interface Component {
    * 子组件
    */
   children?: Component[];
+  /**
+   * 父组件id
+   */
+  parentId?: string;
 }
 
 export interface CommonComponentProps {

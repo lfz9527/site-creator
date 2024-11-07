@@ -24,15 +24,29 @@ interface Action {
    * @returns
    */
   setCurComponentId: (componentId: string | null) => void;
+
+  /**
+   * 删除组件
+   * @param componentId
+   * @returns
+   */
+  deleteComponent: (componentId: string) => boolean;
 }
 
 const useComponents = create<State & Action>()(
   logger(
     devtools(
       persist(
-        (set) => ({
+        (set, get) => ({
           curComponent: null,
-          components: [],
+          components: [
+            // {
+            //   id: '1',
+            //   name: 'Page',
+            //   props: {},
+            //   desc: '页面',
+            // },
+          ],
           addComponent: (component, parentId) =>
             set((state) => {
               // 如果有父组件id, 则添加到父组件的子组件中
@@ -48,8 +62,9 @@ const useComponents = create<State & Action>()(
                   } else {
                     parentComponent.children = [component];
                   }
-                  return { components: [...state.components] };
                 }
+                component.parentId = parentId;
+                return { components: [...state.components] };
               }
               return { components: [...state.components, component] };
             }),
@@ -58,6 +73,29 @@ const useComponents = create<State & Action>()(
               curComponentId: componentId,
               curComponent: getComponentById(componentId, state.components),
             })),
+          deleteComponent: (componentId) => {
+            if (!componentId) return false;
+            const component = getComponentById(componentId, get().components);
+            if (component?.parentId) {
+              const parentComponent = getComponentById(
+                component.parentId,
+                get().components
+              );
+              if (parentComponent) {
+                parentComponent.children = parentComponent?.children?.filter(
+                  (item) => item.id !== componentId
+                );
+                set({ components: [...get().components] });
+              }
+            } else {
+              set({
+                components: [
+                  ...get().components.filter((v) => v.id !== componentId),
+                ],
+              });
+            }
+            return true;
+          },
         }),
         {
           name: "useComponents",
