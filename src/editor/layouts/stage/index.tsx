@@ -131,7 +131,7 @@ const Stage: React.FC = () => {
     <div
       ref={drop}
       style={{ border: canDrop ? "1px solid #ccc" : "none" }}
-      className="p-[24px] h-full"
+      className="bg-white h-full"
       id="stage-container"
     >
       {renderComponents(components)}

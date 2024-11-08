@@ -42,9 +42,11 @@ const Material: React.FC = () => {
   }, [componentConfig]);
 
   return (
-    <div className="flex p-[10px] gap-4 flex-wrap">
+    <div className="flex p-[10px] gap-4 flex-wrap bg-white h-full">
       {components.map((item) => (
-        <ComponentItem key={item.name} onDragEnd={onDragEnd} {...item} />
+       <div>
+         <ComponentItem key={item.name} onDragEnd={onDragEnd} {...item} />
+       </div>
       ))}
     </div>
   );

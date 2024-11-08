@@ -1,5 +1,5 @@
 export default function Setting(){
   return (
-    <h1>Setting</h1>
+    <div className="bg-white h-full">Setting</div>
   );
 }

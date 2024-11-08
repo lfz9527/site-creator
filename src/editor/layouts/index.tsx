@@ -58,8 +58,8 @@ const Layout: React.FC = () => {
   }
 
   return (
-    <div className="h-[100vh] flex flex-col">
-      <div className="h-[60px] flex items-center border-solid border-b-[1px] border-[#ccc]">
+    <div className="h-[100vh] flex flex-col bg-[#edeff3]">
+      <div className=" flex items-center pb-1">
         <Header />
       </div>
       <Allotment>
@@ -67,7 +67,9 @@ const Layout: React.FC = () => {
           <Material />
         </Allotment.Pane>
         <Allotment.Pane>
-          <Stage />
+          <div className="h-full  p-[16px]">
+            <Stage />
+          </div>
         </Allotment.Pane>
         <Allotment.Pane preferredSize={200} maxSize={400} minSize={200}>
           <Setting />

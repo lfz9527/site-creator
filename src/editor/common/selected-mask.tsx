@@ -1,4 +1,10 @@
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { createPortal } from "react-dom";
 import { DeleteOutlined } from "@ant-design/icons";
 import { Popconfirm } from "antd";
@@ -20,6 +26,8 @@ function SelectedMask(
 ) {
   const { curComponentId, deleteComponent, setCurComponentId } =
     useComponents();
+
+  const toolRef = useRef<HTMLElement>(null);
 
   const [position, setPosition] = useState({
     left: 0,
@@ -56,9 +64,16 @@ function SelectedMask(
     const { top: containerTop, left: containerLeft } =
       container.getBoundingClientRect();
 
-    // console.log(top - containerTop + container.scrollTop, left - containerLeft);
+    const toolHeight = toolRef?.current?.clientHeight || 0;
 
+    // 工具top的位置
     let toolsTop = top - containerTop + container.scrollTop;
+
+    // 如果工具组件的高度超过了容器的高度，那么就将工具组件的位置向下移动到组件的下方
+    if (toolsTop - toolHeight <= 20) {
+      toolsTop = toolsTop + height + 24;
+    }
+
     let toolsLeft = left - containerLeft + width;
 
     if (toolsTop <= 0) {
@@ -68,12 +83,12 @@ function SelectedMask(
 
     // 计算位置
     setPosition({
-      top: top - containerTop + container.scrollTop,
-      left: left - containerLeft,
+      top: top - containerTop + container.scrollTop + 16,
+      left: left - containerLeft + 16,
       width,
       height,
-      toolsTop,
-      toolsLeft,
+      toolsTop: toolsTop + 16,
+      toolsLeft: toolsLeft + 16,
     });
   }
 
@@ -103,6 +118,7 @@ function SelectedMask(
           }}
         />
         <div
+          ref={toolRef}
           style={{
             position: "absolute",
             left: position.toolsLeft,
@@ -111,11 +127,11 @@ function SelectedMask(
             color: "#ff4d4f",
             zIndex: 11,
             display: !position.width || position.width < 10 ? "none" : "inline",
-            transform: "translate(-100%, -100%)",
+            transform: "translate(-100%, -110%)",
           }}
         >
           {+(curComponentId || 0) !== 1 && (
-            <div style={{ padding: "0 8px", backgroundColor: "#1890ff" }}>
+            <div className=" flex content-center justify-center px-[4px] h-[20px] bg-[#1890ff]">
               <Popconfirm
                 title="确认删除该组件吗？"
                 overlayClassName="min-w-130px"

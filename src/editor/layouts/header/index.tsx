@@ -8,13 +8,13 @@ const Header = () => {
   const previewPage = () => {};
 
   return (
-    <div className="w-[100%] h-[100%]">
-      <div className="flex flex-row-reverse px-[24px] items-center h-[50px]">
+    <div className="w-[100%] h-[100%] bg-white ">
+      <div className="flex flex-row-reverse px-[24px] py-[6px] items-center">
         <Space className="flex-1 flex justify-end">
-          <Button size="middle" type="primary" onClick={previewPage}>
+          <Button size="small"className="text-xs"  type="primary" onClick={previewPage}>
             预览
           </Button>
-          <Button onClick={savePage} size="middle" type="primary">
+          <Button onClick={savePage} size="small" className="text-xs" type="primary">
             保存
           </Button>
         </Space>

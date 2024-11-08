@@ -4,8 +4,8 @@ import {
   useImperativeHandle,
   useMemo,
   useState,
+  useRef,
 } from "react";
-import { Tag } from "antd";
 import { createPortal } from "react-dom";
 import { useComponentConfigStore, useComponents } from "@editor/stores";
 import { getComponentById } from "@editor/utils";
@@ -35,6 +35,8 @@ function SelectedMask(
   const { componentConfig } = useComponentConfigStore();
   const { components } = useComponents();
 
+  const toolRef = useRef<HTMLElement>(null);
+
   // 对外暴露更新位置方法
   useImperativeHandle(ref, () => ({
     updatePosition,
@@ -60,8 +62,15 @@ function SelectedMask(
     const { top: containerTop, left: containerLeft } =
       container.getBoundingClientRect();
 
+    const toolHeight = toolRef?.current?.clientHeight || 0;
+
     let toolsTop = top - containerTop + container.scrollTop;
     let toolsLeft = left - containerLeft + width;
+
+    // 如果工具组件的高度超过了容器的高度，那么就将工具组件的位置向下移动到组件的下方
+    if (toolsTop - toolHeight <= 20) {
+      toolsTop = toolsTop + height + 24;
+    }
 
     if (toolsTop <= 0) {
       toolsTop -= -30;
@@ -69,12 +78,12 @@ function SelectedMask(
     }
 
     setPosition({
-      top: top - containerTop + container.scrollTop,
-      left: left - containerLeft + container.scrollTop,
+      top: top - containerTop + container.scrollTop + 16,
+      left: left - containerLeft + container.scrollTop + 16,
       width,
       height,
-      toolsTop,
-      toolsLeft,
+      toolsTop: toolsTop + 16,
+      toolsLeft: toolsLeft + 16,
     });
   };
 
