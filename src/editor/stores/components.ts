@@ -40,12 +40,12 @@ const useComponents = create<State & Action>()(
         (set, get) => ({
           curComponent: null,
           components: [
-            // {
-            //   id: '1',
-            //   name: 'Page',
-            //   props: {},
-            //   desc: '页面',
-            // },
+            {
+              id: "1",
+              name: "Page",
+              props: {},
+              type: "static",
+            },
           ],
           addComponent: (component, parentId) =>
             set((state) => {
@@ -55,7 +55,6 @@ const useComponents = create<State & Action>()(
                   parentId,
                   state.components
                 );
-                console.log("parentComponent", parentComponent);
                 if (parentComponent) {
                   if (parentComponent?.children) {
                     parentComponent?.children?.push(component);

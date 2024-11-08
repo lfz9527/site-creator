@@ -11,6 +11,8 @@ import Material from "./material";
 import Setting from "./setting";
 import Stage from "./stage";
 
+import "./index.css";
+
 const Layout: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const componentConfigRef = useRef<any>({});
@@ -59,7 +61,7 @@ const Layout: React.FC = () => {
 
   return (
     <div className="h-[100vh] flex flex-col bg-[#edeff3]">
-      <div className=" flex items-center pb-1">
+      <div className="flex items-center pb-1 ">
         <Header />
       </div>
       <Allotment>

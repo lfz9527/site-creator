@@ -32,10 +32,9 @@ function SelectedMask(
     toolsLeft: 0,
   });
 
+  const toolRef = useRef<HTMLElement>(null);
   const { componentConfig } = useComponentConfigStore();
   const { components } = useComponents();
-
-  const toolRef = useRef<HTMLElement>(null);
 
   // 对外暴露更新位置方法
   useImperativeHandle(ref, () => ({
@@ -69,7 +68,9 @@ function SelectedMask(
 
     // 如果工具组件的高度超过了容器的高度，那么就将工具组件的位置向下移动到组件的下方
     if (toolsTop - toolHeight <= 20) {
-      toolsTop = toolsTop + height + 24;
+      toolsTop = toolsTop + height + 30;
+    } else {
+      toolsTop = toolsTop + 16;
     }
 
     if (toolsTop <= 0) {
@@ -82,7 +83,7 @@ function SelectedMask(
       left: left - containerLeft + container.scrollTop + 16,
       width,
       height,
-      toolsTop: toolsTop + 16,
+      toolsTop: toolsTop,
       toolsLeft: toolsLeft + 16,
     });
   };
@@ -90,6 +91,9 @@ function SelectedMask(
   const curComponent = useMemo(() => {
     return getComponentById(componentId, components);
   }, [componentId]);
+
+  const curComponentConfig = componentConfig[curComponent?.name || ""];
+  const { isRoot, desc, name } = curComponentConfig;
 
   return createPortal(
     <>
@@ -99,7 +103,7 @@ function SelectedMask(
           left: position.left,
           top: position.top,
           backgroundColor: "rgba(66, 133, 244, 0.04)",
-          border: "1px dashed rgb(66, 133, 244)",
+          border: "2px dashed var(--edit-primary-color)",
           pointerEvents: "none",
           width: position.width,
           height: position.height,
@@ -111,25 +115,15 @@ function SelectedMask(
       <div
         style={{
           position: "absolute",
-          left: position.toolsLeft,
-          top: position.toolsTop,
+          left: isRoot ? position.width + 16 : position.toolsLeft,
+          top: isRoot ? position.top : position.toolsTop,
           zIndex: 120,
           display: !position.width || position.width < 10 ? "none" : "inline",
           transform: "translate(-100%, -100%)",
         }}
       >
-        <div
-          style={{
-            padding: "0 8px",
-            backgroundColor: "#1890ff",
-            borderRadius: 4,
-            color: "#fff",
-            fontSize: "12px",
-            cursor: "pointer",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {componentConfig[curComponent?.name || ""]?.desc}
+        <div className="px-[4px] py-0 bg-[var(--edit-primary-color)] rounded-[2px] text-white text-xs cursor-pointer space whitespace-nowrap">
+          {desc || name}
         </div>
       </div>
     </>,

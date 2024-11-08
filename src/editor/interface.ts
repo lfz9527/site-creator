@@ -4,6 +4,9 @@ export interface Context {
 
 export type ComType = "static" | "iframe";
 
+/**
+ * 组件
+ */
 export interface Component {
   /**
    * 组件唯一标识
@@ -35,6 +38,10 @@ export interface Component {
   parentId?: string;
 }
 
+/**
+ * 组件公共属性
+ *
+ */
 export interface CommonComponentProps {
   _id: string;
   _name: string;
@@ -42,7 +49,12 @@ export interface CommonComponentProps {
   children?: any;
   [key: string]: any;
 }
-
+/**
+ * 组件配置
+ *
+ * @export
+ * @interface ComponentConfig
+ */
 export interface ComponentConfig {
   /**
    * 组件名称
@@ -68,4 +80,8 @@ export interface ComponentConfig {
    * 组件类型
    */
   comType: ComType;
+  /**
+   * 是否是根组件
+   */
+  isRoot?: boolean;
 }

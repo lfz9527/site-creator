@@ -4,12 +4,14 @@ import {
   useImperativeHandle,
   useRef,
   useState,
+  useMemo,
 } from "react";
 import { createPortal } from "react-dom";
 import { DeleteOutlined } from "@ant-design/icons";
 import { Popconfirm } from "antd";
-
-import { useComponents } from "@editor/stores";
+import { observeContainer } from "@editor/utils";
+import { useComponents, useComponentConfigStore } from "@editor/stores";
+import { getComponentById } from "@editor/utils";
 
 interface Props {
   // 组件id
@@ -24,11 +26,7 @@ function SelectedMask(
   { componentId, containerClassName, offsetContainerIdName }: Props,
   ref: any
 ) {
-  const { curComponentId, deleteComponent, setCurComponentId } =
-    useComponents();
-
-  const toolRef = useRef<HTMLElement>(null);
-
+  const toolRef = useRef<HTMLElement>();
   const [position, setPosition] = useState({
     left: 0,
     top: 0,
@@ -36,12 +34,36 @@ function SelectedMask(
     height: 0,
     toolsTop: 0,
     toolsLeft: 0,
+    rootToolsTop: 0,
+    rootToolsLeft: 0,
   });
+  const { componentConfig } = useComponentConfigStore();
+  const { components, deleteComponent, setCurComponentId } = useComponents();
+  const curComponent = useMemo(() => {
+    return getComponentById(componentId, components);
+  }, [componentId]);
+
+  const curComponentConfig = componentConfig[curComponent?.name || ""];
+  const { isRoot, desc } = curComponentConfig;
 
   // 对外暴露更新位置方法
   useImperativeHandle(ref, () => ({
     updatePosition,
   }));
+
+  // useEffect(() => {
+  //   const { resizeObserver, container } = observeContainer(
+  //     () => {
+  //       updatePosition();
+  //     },
+  //     { dataComponentId: componentId }
+  //   );
+  //   return () => {
+  //     if (container) {
+  //       resizeObserver.unobserve(container);
+  //     }
+  //   };
+  // }, [componentId]);
 
   useEffect(() => {
     updatePosition();
@@ -89,6 +111,8 @@ function SelectedMask(
       height,
       toolsTop: toolsTop + 16,
       toolsLeft: toolsLeft + 16,
+      rootToolsTop: top,
+      rootToolsLeft: width,
     });
   }
 
@@ -99,6 +123,14 @@ function SelectedMask(
 
   const maskContainer = document.querySelector(`.${containerClassName}`);
 
+  function MaskTag({ children }) {
+    return (
+      <div className="flex items-center justify-center px-[4px] h-[20px] bg-[var(--edit-primary-color)]">
+        {children}
+      </div>
+    );
+  }
+
   if (maskContainer) {
     return createPortal(
       <>
@@ -107,8 +139,7 @@ function SelectedMask(
             position: "absolute",
             left: position.left,
             top: position.top,
-            backgroundColor: "rgba(66, 133, 244, 0.2)",
-            border: "1px solid rgb(66, 133, 244)",
+            border: "2px solid var(--edit-primary-color)",
             pointerEvents: "none",
             width: position.width,
             height: position.height,
@@ -117,6 +148,23 @@ function SelectedMask(
             boxSizing: "border-box",
           }}
         />
+        {isRoot && (
+          <div
+            style={{
+              position: "absolute",
+              left: position.rootToolsLeft,
+              top: position.rootToolsTop,
+              fontSize: "12px",
+              zIndex: 11,
+              color: "#fff",
+              display:
+                !position.width || position.width < 10 ? "none" : "inline",
+              transform: "translate(-100%, -110%)",
+            }}
+          >
+            <MaskTag>{desc}</MaskTag>
+          </div>
+        )}
         <div
           ref={toolRef}
           style={{
@@ -124,42 +172,17 @@ function SelectedMask(
             left: position.toolsLeft,
             top: position.toolsTop,
             fontSize: "14px",
-            color: "#ff4d4f",
             zIndex: 11,
             display: !position.width || position.width < 10 ? "none" : "inline",
             transform: "translate(-100%, -110%)",
           }}
         >
-          {+(curComponentId || 0) !== 1 && (
-            <div className=" flex content-center justify-center px-[4px] h-[20px] bg-[#1890ff]">
-              <Popconfirm
-                title="确认删除该组件吗？"
-                overlayClassName="min-w-130px"
-                okText={
-                  <div
-                    className="delete-confirm-btn"
-                    style={{ padding: "0 7px" }}
-                  >
-                    确认
-                  </div>
-                }
-                cancelText={
-                  <div
-                    className="delete-confirm-btn"
-                    style={{ padding: "0 7px" }}
-                  >
-                    取消
-                  </div>
-                }
-                onConfirm={deleteHandle}
-                // getPopupContainer={n => n.parentNode}
-                placement="bottomRight"
-                okButtonProps={{ style: { padding: 0 } }}
-                cancelButtonProps={{ style: { padding: 0 } }}
-              >
+          {!isRoot && (
+            <MaskTag>
+              <div className="cursor-pointer" onClick={deleteHandle}>
                 <DeleteOutlined style={{ color: "#fff" }} />
-              </Popconfirm>
-            </div>
+              </div>
+            </MaskTag>
           )}
         </div>
       </>,

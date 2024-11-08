@@ -7,7 +7,7 @@ export default (ctx: Context) => {
     name: ItemType.Button,
     desc: "按钮",
     component: Button,
-    allowDrag: [ItemType.Space],
+    allowDrag: [ItemType.Page],
     comType: "static",
   });
 };

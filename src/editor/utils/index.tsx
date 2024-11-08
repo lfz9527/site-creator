@@ -38,3 +38,40 @@ export const getAcceptDrop = (componentName: string) => {
       .map((o) => o.name) || []
   );
 };
+
+type observeContainerType = (
+  cb: (container: HTMLElement, entries?: ResizeObserverEntry[]) => void,
+  option: {
+    containerId?: string;
+    containerClassName?: string;
+    dataComponentId?: string;
+  }
+) => {
+  resizeObserver: ResizeObserver;
+  container: HTMLElement;
+};
+
+/**
+ * 监听容器尺寸变化
+ * @param cb 回调函数
+ * @param option 配置
+ * @returns
+ */
+export const observeContainer: observeContainerType = (cb, option) => {
+  const { containerId, containerClassName, dataComponentId } = option;
+
+  const names = [
+    containerId && `#${containerId}`,
+    containerClassName && `.${containerClassName}`,
+    dataComponentId && `[data-component-id="${dataComponentId}"]`,
+  ]
+    .filter(Boolean)
+    .join(",");
+  const container = document.querySelector(names!) as HTMLElement;
+  const resizeObserver = new ResizeObserver((entries) => {
+    cb && cb(container, entries);
+  });
+  if (container) resizeObserver.observe(container);
+
+  return { resizeObserver, container };
+};
