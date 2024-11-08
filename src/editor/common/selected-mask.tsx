@@ -8,7 +8,6 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { DeleteOutlined } from "@ant-design/icons";
-import { Popconfirm } from "antd";
 import { observeContainer } from "@editor/utils";
 import { useComponents, useComponentConfigStore } from "@editor/stores";
 import { getComponentById } from "@editor/utils";
@@ -51,19 +50,19 @@ function SelectedMask(
     updatePosition,
   }));
 
-  // useEffect(() => {
-  //   const { resizeObserver, container } = observeContainer(
-  //     () => {
-  //       updatePosition();
-  //     },
-  //     { dataComponentId: componentId }
-  //   );
-  //   return () => {
-  //     if (container) {
-  //       resizeObserver.unobserve(container);
-  //     }
-  //   };
-  // }, [componentId]);
+  useEffect(() => {
+    const { resizeObserver, container } = observeContainer(
+      () => {
+        updatePosition();
+      },
+      { dataComponentId: componentId }
+    );
+    return () => {
+      if (container) {
+        resizeObserver.unobserve(container);
+      }
+    };
+  }, [componentId]);
 
   useEffect(() => {
     updatePosition();
@@ -123,6 +122,7 @@ function SelectedMask(
 
   const maskContainer = document.querySelector(`.${containerClassName}`);
 
+  // @ts-ignore
   function MaskTag({ children }) {
     return (
       <div className="flex items-center justify-center px-[4px] h-[20px] bg-[var(--edit-primary-color)]">

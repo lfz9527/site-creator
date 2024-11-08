@@ -32,7 +32,7 @@ const Page: React.FC<CommonComponentProps> = (props) => {
       static-type="root-page"
       style={{
         ...style,
-        transition: "width 0.3s ease",
+        transition: "width 0.1s ease",
         border: canDrop ? "1px solid #006cff" : "none",
       }}
       data-component-id={_id}
