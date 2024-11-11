@@ -48,6 +48,7 @@ const Header = () => {
         screenChange(width)
     }, [width])
 
+    // 屏幕尺寸变化
     function screenChange(width: number | string) {
         setScreens((scr) => {
             setStageWidth(width)

@@ -50,12 +50,28 @@ function SelectedMask(
         updatePosition
     }))
 
+    // 监听节点位置尺寸变化
+    useEffect(() => {
+        const {resizeObserver, container: node} = observeContainer(
+            () => {
+                updatePosition()
+            },
+            {dataComponentId: componentId}
+        )
+        return () => {
+            if (node) {
+                resizeObserver.unobserve(node)
+            }
+        }
+    }, [componentId])
+
+    // 监听容器位置尺寸变化
     useEffect(() => {
         const {resizeObserver, container} = observeContainer(
             () => {
                 updatePosition()
             },
-            {dataComponentId: componentId}
+            {containerId: offsetContainerIdName}
         )
         return () => {
             if (container) {
