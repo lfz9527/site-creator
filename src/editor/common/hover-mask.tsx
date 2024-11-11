@@ -32,7 +32,6 @@ function SelectedMask(
     toolsLeft: 0,
   });
 
-  const toolRef = useRef<HTMLElement>(null);
   const { componentConfig } = useComponentConfigStore();
   const { components } = useComponents();
 
@@ -61,30 +60,21 @@ function SelectedMask(
     const { top: containerTop, left: containerLeft } =
       container.getBoundingClientRect();
 
-    const toolHeight = toolRef?.current?.clientHeight || 0;
-
     let toolsTop = top - containerTop + container.scrollTop;
-    let toolsLeft = left - containerLeft + width;
-
-    // 如果工具组件的高度超过了容器的高度，那么就将工具组件的位置向下移动到组件的下方
-    if (toolsTop - toolHeight <= 20) {
-      toolsTop = toolsTop + height + 30;
-    } else {
-      toolsTop = toolsTop + 16;
-    }
-
+    const toolsLeft = left - containerLeft + width;
     if (toolsTop <= 0) {
-      toolsTop -= -30;
-      toolsLeft -= 10;
+      toolsTop -= -50;
+    } else {
+      toolsTop = toolsTop - 2;
     }
 
     setPosition({
-      top: top - containerTop + container.scrollTop + 16,
-      left: left - containerLeft + container.scrollTop + 16,
+      top: top - containerTop + container.scrollTop,
+      left: left - containerLeft + container.scrollTop,
       width,
       height,
       toolsTop: toolsTop,
-      toolsLeft: toolsLeft + 16,
+      toolsLeft: toolsLeft,
     });
   };
 
@@ -98,28 +88,20 @@ function SelectedMask(
   return createPortal(
     <>
       <div
+        className="absolute bg-red bg-[rgba(66, 133, 244, 0.04)] border-2 border-dashed border-[var(--edit-primary-color)] pointer-events-none z-120 rounded-[4px] box-border"
         style={{
-          position: "absolute",
           left: position.left,
           top: position.top,
-          backgroundColor: "rgba(66, 133, 244, 0.04)",
-          border: "2px dashed var(--edit-primary-color)",
-          pointerEvents: "none",
           width: position.width,
           height: position.height,
-          zIndex: 120,
-          borderRadius: 4,
-          boxSizing: "border-box",
         }}
       />
       <div
+        className="absolute -translate-x-full -translate-y-full z-120"
         style={{
-          position: "absolute",
-          left: isRoot ? position.width + 16 : position.toolsLeft,
+          left: isRoot ? position.width : position.toolsLeft,
           top: isRoot ? position.top : position.toolsTop,
-          zIndex: 120,
           display: !position.width || position.width < 10 ? "none" : "inline",
-          transform: "translate(-100%, -100%)",
         }}
       >
         <div className="px-[4px] py-0 bg-[var(--edit-primary-color)] rounded-[2px] text-white text-xs cursor-pointer space whitespace-nowrap">

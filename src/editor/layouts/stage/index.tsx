@@ -110,7 +110,7 @@ const Stage: React.FC = () => {
     });
   };
   return (
-    <div className="h-full bg-white" id="stage-container">
+    <div className="relative h-full bg-white" id="stage-container">
       {renderComponents(components)}
       {curComponentId && (
         <SelectedMask

@@ -1,7 +1,4 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Allotment } from "allotment";
-import "allotment/dist/style.css";
-
 import { ComponentConfig } from "@/editor/interface";
 import { useComponentConfigStore } from "@/editor/stores";
 
@@ -64,19 +61,17 @@ const Layout: React.FC = () => {
       <div className="flex items-center pb-1 ">
         <Header />
       </div>
-      <Allotment>
-        <Allotment.Pane preferredSize={200} maxSize={400} minSize={200}>
+      <div className="flex flex-row w-full h-full">
+        <div className="w-[200px] h-full flex-shrink-0">
           <Material />
-        </Allotment.Pane>
-        <Allotment.Pane>
-          <div className="h-full  p-[16px]">
-            <Stage />
-          </div>
-        </Allotment.Pane>
-        <Allotment.Pane preferredSize={200} maxSize={400} minSize={200}>
+        </div>
+        <div className="h-full w-full  p-[16px]">
+          <Stage />
+        </div>
+        <div className="w-[200px] h-full flex-shrink-0">
           <Setting />
-        </Allotment.Pane>
-      </Allotment>
+        </div>
+      </div>
     </div>
   );
 };

@@ -85,18 +85,16 @@ function SelectedMask(
     const { top: containerTop, left: containerLeft } =
       container.getBoundingClientRect();
 
-    const toolHeight = toolRef?.current?.clientHeight || 0;
+    const toolHeight = toolRef?.current?.clientHeight || 20;
+    let toolsLeft = left - containerLeft + width;
 
     // 工具top的位置
     let toolsTop = top - containerTop + container.scrollTop;
 
     // 如果工具组件的高度超过了容器的高度，那么就将工具组件的位置向下移动到组件的下方
-    if (toolsTop - toolHeight <= 20) {
+    if (toolsTop < toolHeight) {
       toolsTop = toolsTop + height + 24;
     }
-
-    let toolsLeft = left - containerLeft + width;
-
     if (toolsTop <= 0) {
       toolsTop -= -30;
       toolsLeft -= 10;
@@ -104,14 +102,14 @@ function SelectedMask(
 
     // 计算位置
     setPosition({
-      top: top - containerTop + container.scrollTop + 16,
-      left: left - containerLeft + 16,
+      top: top - containerTop + container.scrollTop,
+      left: left - containerLeft,
       width,
       height,
-      toolsTop: toolsTop + 16,
-      toolsLeft: toolsLeft + 16,
-      rootToolsTop: top,
-      rootToolsLeft: width,
+      toolsTop: toolsTop,
+      toolsLeft: toolsLeft,
+      rootToolsTop: top - containerTop + container.scrollTop + 32,
+      rootToolsLeft: width - 16,
     });
   }
 
@@ -125,7 +123,7 @@ function SelectedMask(
   // @ts-ignore
   function MaskTag({ children }) {
     return (
-      <div className="flex items-center justify-center px-[4px] h-[20px] bg-[var(--edit-primary-color)]">
+      <div className="flex items-center justify-center px-[4px] h-[20px] bg-[var(--edit-primary-color)] whitespace-nowrap">
         {children}
       </div>
     );
@@ -135,31 +133,20 @@ function SelectedMask(
     return createPortal(
       <>
         <div
+          className="absolute border-x-2 border-y-2 border-solid border-[var(--edit-primary-color)] pointer-events-none z-[1003] rounded-[4px] box-border"
           style={{
-            position: "absolute",
             left: position.left,
             top: position.top,
-            border: "2px solid var(--edit-primary-color)",
-            pointerEvents: "none",
             width: position.width,
             height: position.height,
-            zIndex: 1003,
-            borderRadius: 4,
-            boxSizing: "border-box",
           }}
         />
         {isRoot && (
           <div
+            className="absolute text-white text-[12px] z-11 -translate-x-full -translate-y-full"
             style={{
-              position: "absolute",
               left: position.rootToolsLeft,
               top: position.rootToolsTop,
-              fontSize: "12px",
-              zIndex: 11,
-              color: "#fff",
-              display:
-                !position.width || position.width < 10 ? "none" : "inline",
-              transform: "translate(-100%, -110%)",
             }}
           >
             <MaskTag>{desc}</MaskTag>
@@ -178,11 +165,13 @@ function SelectedMask(
           }}
         >
           {!isRoot && (
-            <MaskTag>
-              <div className="cursor-pointer" onClick={deleteHandle}>
-                <DeleteOutlined style={{ color: "#fff" }} />
-              </div>
-            </MaskTag>
+            <div className="flex items-center justify-center gap-[5px]">
+              <MaskTag>
+                <div className="cursor-pointer" onClick={deleteHandle}>
+                  <DeleteOutlined style={{ color: "#fff" }} />
+                </div>
+              </MaskTag>
+            </div>
           )}
         </div>
       </>,
