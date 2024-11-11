@@ -39,7 +39,7 @@ const loggerImpl: LoggerImpl = (f, name) => (set, get, store) => {
         // @ts-ignore
         set(...args)
         // 记录日志，包括可选的名称和当前状态
-        console.log('store--',...(name ? [`${name}:`] : []), get())
+        console.log('store--', ...(name ? [`${name}:`] : []), get())
     }
 
     // 将新的 set 函数设置到 store 中

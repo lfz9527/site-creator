@@ -1,14 +1,13 @@
 import {create} from 'zustand'
 import {persist, createJSONStorage, devtools} from 'zustand/middleware'
 import {logger} from './loggerMiddleware'
-import {ComponentConfig} from '@editor/interface'
 
 interface State {
-    componentConfig: {[key: string]: ComponentConfig} // 组件配置
+    width: number | string // 画板宽度
 }
 
 interface Action {
-    setComponentConfig: (componentConfig: State['componentConfig']) => void
+    setStageWidth: (width: State['width']) => void
 }
 
 const useComponentConfigStore = create<State & Action>()(
@@ -16,16 +15,15 @@ const useComponentConfigStore = create<State & Action>()(
         devtools(
             persist(
                 (set) => ({
-                    componentConfig: {},
-                    setComponentConfig: (componentConfig) =>
-                        set({componentConfig})
+                    width: 0,
+                    setStageWidth: (width) => set({width})
                 }),
                 {
-                    name: 'useComponentConfigStore',
+                    name: 'useStageConfig',
                     storage: createJSONStorage(() => localStorage)
                 }
             ),
-            {name: 'useComponentConfigStore'}
+            {name: 'useStageConfig'}
         )
     )
 )
