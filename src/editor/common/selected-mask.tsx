@@ -93,7 +93,7 @@ function SelectedMask(
 
     // 如果工具组件的高度超过了容器的高度，那么就将工具组件的位置向下移动到组件的下方
     if (toolsTop < toolHeight) {
-      toolsTop = toolsTop + height + 24;
+      toolsTop = toolsTop + height + 20;
     }
     if (toolsTop <= 0) {
       toolsTop -= -30;
@@ -154,14 +154,11 @@ function SelectedMask(
         )}
         <div
           ref={toolRef}
+          className="absolute text-[14px] z-11 -translate-y-full -translate-x-full"
           style={{
-            position: "absolute",
             left: position.toolsLeft,
             top: position.toolsTop,
-            fontSize: "14px",
-            zIndex: 11,
             display: !position.width || position.width < 10 ? "none" : "inline",
-            transform: "translate(-100%, -110%)",
           }}
         >
           {!isRoot && (
