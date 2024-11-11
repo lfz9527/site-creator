@@ -34,9 +34,10 @@ const Material: React.FC = () => {
     const components = useMemo(() => {
         // 加载所有组件
         // 格式化组件数据
-        const com = Object.values(componentConfig).map(
-            (config: ComponentConfig) => config
-        )
+        const com = Object.values(componentConfig)
+            .map((config: ComponentConfig) => config)
+            .filter((conf) => !conf.isRoot)
+
         const comMap = new Map<categoryType, ComponentConfig[]>()
         // 按分类进行分组
         com.forEach((item: ComponentConfig) => {

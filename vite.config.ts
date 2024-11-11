@@ -28,5 +28,8 @@ export default defineConfig({
                 javascriptEnabled: true
             }
         }
+    },
+    server: {
+        port: 8080
     }
 })
