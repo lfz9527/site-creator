@@ -84,7 +84,7 @@ function SelectedMask(
     }, [componentId])
 
     const curComponentConfig = componentConfig[curComponent?.name || '']
-    const {isRoot, desc, name} = curComponentConfig
+    const {isRoot, description, name} = curComponentConfig
 
     return createPortal(
         <>
@@ -109,7 +109,7 @@ function SelectedMask(
                 }}
             >
                 <div className='px-[4px] py-0 bg-[var(--edit-primary-color)] rounded-[2px] text-white text-xs cursor-pointer space whitespace-nowrap'>
-                    {desc || name}
+                    {description || name}
                 </div>
             </div>
         </>,

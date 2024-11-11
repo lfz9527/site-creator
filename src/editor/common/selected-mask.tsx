@@ -43,7 +43,7 @@ function SelectedMask(
     }, [componentId])
 
     const curComponentConfig = componentConfig[curComponent?.name || '']
-    const {isRoot, desc} = curComponentConfig
+    const {isRoot, description} = curComponentConfig
 
     // 对外暴露更新位置方法
     useImperativeHandle(ref, () => ({
@@ -167,7 +167,7 @@ function SelectedMask(
                             top: position.rootToolsTop
                         }}
                     >
-                        <MaskTag>{desc}</MaskTag>
+                        <MaskTag>{description}</MaskTag>
                     </div>
                 )}
                 <div

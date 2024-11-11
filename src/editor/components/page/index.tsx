@@ -12,7 +12,7 @@ const Page: React.FC<CommonComponentProps> = (props) => {
             className='w-full h-full overflow-hidden bg-white'
             style={{
                 transition: 'width 0.1s ease',
-                border: canDrop ? '1px solid #006cff' : 'none'
+                border: `2px solid ${canDrop ? 'var(--edit-primary-color)' : '#fff'}`
             }}
             data-component-id={_id}
         >

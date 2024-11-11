@@ -7,7 +7,6 @@ import {
 } from '@editor/stores'
 import SelectedMask from '@/editor/common/selected-mask'
 import HoverMask from '@editor/common/hover-mask'
-import {observeContainer} from '@editor/utils'
 
 const Stage: React.FC = () => {
     const {components, setCurComponentId, curComponentId} = useComponents()
