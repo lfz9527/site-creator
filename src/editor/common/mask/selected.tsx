@@ -98,7 +98,7 @@ const SelectMask = forwardRef<HTMLDivElement, Omit<Props, 'ref'>>(
 
             setToolPos({
                 top: realTop,
-                left: width
+                left: left - cLeft + width
             })
         }
 
