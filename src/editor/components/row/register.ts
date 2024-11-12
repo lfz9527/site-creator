@@ -7,7 +7,7 @@ export default (ctx: Context) => {
         name: ItemType.Row,
         description: '容器',
         icon: '',
-        allowDrag: [ItemType.Page],
+        allowDrag: [ItemType.Page, ItemType.Row],
         component: Row,
         comType: 'static',
         category: 'layout'

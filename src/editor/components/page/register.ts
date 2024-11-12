@@ -11,6 +11,12 @@ export default (ctx: Context) => {
         component: Page,
         comType: 'static',
         isRoot: true,
-        category: 'layout'
+        category: 'layout',
+        defaultProps: [
+            {
+                key: 'containerId',
+                value: 'stage-container'
+            }
+        ]
     })
 }

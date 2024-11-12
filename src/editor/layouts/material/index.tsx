@@ -9,7 +9,7 @@ import type {CollapseProps} from 'antd'
 import './index.less'
 
 const Material: React.FC = () => {
-    const {addComponent} = useComponents()
+    const {addComponent, setCurComponentId} = useComponents()
     const {componentConfig} = useComponentConfigStore()
 
     // 拖拽结束时触发的回调
@@ -20,15 +20,20 @@ const Material: React.FC = () => {
         props: any
         type: ComType
     }) => {
-        addComponent(
-            {
-                id: String(new Date().getTime()),
-                name: dropResult.name,
-                props: dropResult.props,
-                type: dropResult.type
-            },
-            dropResult.id
-        )
+        console.log('dropResult.id', dropResult.id)
+
+        const component = {
+            id: String(new Date().getTime()),
+            name: dropResult.name,
+            props: dropResult.props,
+            type: dropResult.type,
+            description: dropResult.description
+        }
+        addComponent(component, dropResult.id)
+    }
+
+    const onDragStart = () => {
+        setCurComponentId(null)
     }
 
     const components = useMemo(() => {
@@ -48,24 +53,20 @@ const Material: React.FC = () => {
                 comMap.set(item.category, [item])
             }
         })
-
-        console.log('comMap', comMap)
-
         const items: CollapseProps['items'] = []
         for (const [key, value] of comMap) {
             const col = {
                 label: categoryEnum[key],
                 key: key,
                 children: value.map((item, index) => (
-                    <>
-                        <div key={item.name + index}>
-                            <ComponentItem
-                                key={item.name}
-                                onDragEnd={onDragEnd}
-                                {...item}
-                            />
-                        </div>
-                    </>
+                    <div key={item.name + index}>
+                        <ComponentItem
+                            key={item.name}
+                            onDragEnd={onDragEnd}
+                            onDragStart={onDragStart}
+                            {...item}
+                        />
+                    </div>
                 ))
             }
             items.push(col)
@@ -73,8 +74,6 @@ const Material: React.FC = () => {
 
         return items
     }, [componentConfig])
-
-    console.log('components', components)
 
     return (
         <div className='relative flex p-[10px] gap-4 flex-wrap bg-white h-full'>

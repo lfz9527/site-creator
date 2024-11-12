@@ -10,6 +10,12 @@ export default (ctx: Context) => {
         component: Button,
         allowDrag: [ItemType.Page, ItemType.Row],
         comType: 'static',
-        category: 'basic'
+        category: 'basic',
+        defaultProps: [
+            {
+                key: 'text',
+                value: '按钮'
+            }
+        ]
     })
 }

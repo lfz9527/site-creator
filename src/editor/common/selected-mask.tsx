@@ -81,6 +81,17 @@ function SelectedMask(
     }, [componentId])
 
     useEffect(() => {
+        window.addEventListener('scroll', () => {
+            updatePosition()
+        })
+        return () => {
+            window.removeEventListener('scroll', () => {
+                updatePosition()
+            })
+        }
+    }, [componentId])
+
+    useEffect(() => {
         updatePosition()
     }, [componentId])
 
@@ -184,6 +195,11 @@ function SelectedMask(
                 >
                     {!isRoot && (
                         <div className='flex items-center justify-center gap-[5px]'>
+                            <MaskTag>
+                                <span className='text-xs text-white z-11'>
+                                    {description}
+                                </span>
+                            </MaskTag>
                             <MaskTag>
                                 <div
                                     className='cursor-pointer'

@@ -7,6 +7,7 @@ import {
 } from '@editor/stores'
 import SelectedMask from '@/editor/common/selected-mask'
 import HoverMask from '@editor/common/hover-mask'
+import {defaultProps} from '@/editor/interface'
 
 const Stage: React.FC = () => {
     const {components, setCurComponentId, curComponentId} = useComponents()
@@ -17,10 +18,28 @@ const Stage: React.FC = () => {
     const selectedMaskRef = useRef<any>(null)
     const [hoverComponentId, setHoverComponentId] = useState()
     const iframeRef = useRef<HTMLDivElement>(null)
+    const [iframeHeight, setIframeHeight] = useState(0)
 
     useEffect(() => {
         setStageWidth(iframeRef.current?.offsetWidth || '100%')
+        heightChange()
+        window.addEventListener('resize', () => {
+            heightChange()
+        })
+
+        return () => {
+            window.removeEventListener('resize', () => {
+                heightChange()
+            })
+        }
     }, [])
+
+    // 高度改变时，更新 iframe 高度
+    const heightChange = () => {
+        const iframeWrap = iframeRef.current?.parentElement as HTMLElement
+        const iframeWrapHeight = iframeWrap.offsetHeight - 32
+        setIframeHeight(iframeWrapHeight || 0)
+    }
 
     // 组件改变后，重新渲染遮罩
     useEffect(() => {
@@ -99,6 +118,18 @@ const Stage: React.FC = () => {
         }
     }, [curComponentId])
 
+    // 格式化组件 props
+    const formatProps = (component: Component) => {
+        const props: {
+            [key: string]: any
+        } = {}
+        component?.props.forEach((item: defaultProps) => {
+            const {key, value} = item
+            props[key] = value
+        })
+        return props
+    }
+
     // 渲染组件
     const renderComponents = (components: Component[]): React.ReactNode => {
         return components.map((component: Component) => {
@@ -106,6 +137,7 @@ const Stage: React.FC = () => {
             if (!componentConfig[component.name]) {
                 return null
             }
+            const props = formatProps(component)
 
             return React.createElement(
                 componentConfig[component.name].component,
@@ -114,20 +146,22 @@ const Stage: React.FC = () => {
                     _id: component.id,
                     _name: component.name,
                     'data-component-id': component.id,
-                    ...component.props
+                    ...props
                 },
-                component.props.children ||
-                    renderComponents(component.children || [])
+                renderComponents(component.children || [])
             )
         })
     }
     return (
         <div
             ref={iframeRef}
-            className='relative h-full bg-white'
+            className='relative'
             id={iframeId}
             style={{
+                overflowY: 'auto',
+                height: iframeHeight + 'px',
                 width: '100%',
+                backgroundColor: '#fff',
                 transition: 'width 0.3s ease-in-out' // 添加过渡效果
             }}
         >

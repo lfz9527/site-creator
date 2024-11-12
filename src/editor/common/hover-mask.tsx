@@ -43,6 +43,17 @@ function SelectedMask(
         updatePosition()
     }, [componentId])
 
+    useEffect(() => {
+        window.addEventListener('scroll', () => {
+            updatePosition()
+        })
+        return () => {
+            window.removeEventListener('scroll', () => {
+                updatePosition()
+            })
+        }
+    }, [componentId])
+
     const updatePosition = () => {
         if (!componentId) return
 
@@ -64,14 +75,14 @@ function SelectedMask(
         let toolsTop = top - containerTop + container.scrollTop
         const toolsLeft = left - containerLeft + width
         if (toolsTop <= 0) {
-            toolsTop -= -50
+            toolsTop += height + 18
         } else {
             toolsTop = toolsTop - 2
         }
 
         setPosition({
             top: top - containerTop + container.scrollTop,
-            left: left - containerLeft + container.scrollTop,
+            left: left - containerLeft,
             width,
             height,
             toolsTop: toolsTop,

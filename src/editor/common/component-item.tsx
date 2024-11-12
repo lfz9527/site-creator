@@ -1,8 +1,8 @@
 import {useDrag} from 'react-dnd'
-import {ItemType} from '@editor/item-type'
 import {ComType} from '@editor/interface'
 import SvgIcon from './svg-icon'
 import React from 'react'
+import {useComponentConfigStore} from '@editor/stores'
 
 interface ComponentItemProps {
     // 组件名称
@@ -10,7 +10,9 @@ interface ComponentItemProps {
     // 组件描述
     description: string
     // 拖拽结束回调
-    onDragEnd: any
+    onDragEnd: (...args: any[]) => void
+    // 开始拖拽回调
+    onDragStart: (...args: any[]) => void
     // 组件图标
     icon?: string
     // 组件类型
@@ -18,17 +20,25 @@ interface ComponentItemProps {
 }
 
 const ComponentItem: React.FC<ComponentItemProps> = (props) => {
-    const {name, description, onDragEnd, icon} = props
+    const {name, description, onDragEnd, icon, onDragStart} = props
+
+    const {componentConfig} = useComponentConfigStore()
 
     const [{isDragging}, drag] = useDrag({
         type: name,
         end: (_, monitor) => {
             const dropResult = monitor.getDropResult()
             if (!dropResult) return
+
+            const defaultProps = componentConfig?.[name]?.defaultProps || []
+
+            const props: any = [...defaultProps]
+
             if (onDragEnd) {
                 const option = {
                     name,
-                    props: name === ItemType.Button ? {children: '按钮'} : {},
+                    props,
+                    description,
                     ...dropResult
                 }
                 // 拖拽结束回调
@@ -43,15 +53,14 @@ const ComponentItem: React.FC<ComponentItemProps> = (props) => {
         })
     })
 
-    const opacity = isDragging ? 0.4 : 1
+    if (isDragging) {
+        onDragStart()
+    }
 
     return (
         <div
             ref={drag}
             className='component-item h-[100px] bg-white cursor-move py-[8px] px-[20px] flex justify-center items-center flex-col gap-[10px] hover:drop-shadow-lg border-[1px]'
-            style={{
-                opacity
-            }}
         >
             <SvgIcon
                 name={icon ? icon : 'component-default-icon'}

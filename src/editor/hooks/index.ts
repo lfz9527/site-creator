@@ -1,3 +1,3 @@
 import useDrop from './useDrop'
 
-export { useDrop }
+export {useDrop}

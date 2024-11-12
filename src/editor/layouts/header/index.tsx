@@ -1,7 +1,8 @@
 import {useCallback, useEffect, useState} from 'react'
-import {Button, Space} from 'antd'
-import {useStageConfig} from '@editor/stores'
+import {Button, Space, Popconfirm} from 'antd'
+import {useStageConfig, useComponents} from '@editor/stores'
 import SvgIcon from '@/editor/common/svg-icon'
+import {initStage} from '@editor/utils'
 import './index.less'
 
 interface screens {
@@ -42,6 +43,7 @@ const screenIframe: screens[] = [
 const Header = () => {
     const [screens, setScreens] = useState<screens[]>(screenIframe)
     const {width, setStageWidth} = useStageConfig()
+    const {initPage} = useComponents()
 
     // 屏幕大小列表
     useEffect(() => {
@@ -83,6 +85,11 @@ const Header = () => {
     // 预览页面
     const previewPage = () => {}
 
+    // 清空画布
+    const clearPage = () => {
+        initStage()
+    }
+
     return (
         <div className='w-[100%] h-[100%] bg-white'>
             <div className='flex px-[24px] py-[6px] items-center'>
@@ -108,6 +115,18 @@ const Header = () => {
                     })}
                 </Space>
                 <Space className='flex justify-end ml-auto mr-0 area-right w-[400px]'>
+                    <Popconfirm
+                        title='确认清空画布吗？'
+                        okText='确认'
+                        cancelText='取消'
+                        onConfirm={clearPage}
+                        placement='bottomRight'
+                    >
+                        <Button size='small' className='text-xs'>
+                            清空画布
+                        </Button>
+                    </Popconfirm>
+
                     <Button
                         size='small'
                         className='text-xs'

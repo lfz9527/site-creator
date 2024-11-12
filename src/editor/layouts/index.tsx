@@ -1,6 +1,7 @@
 import React, {useRef, useEffect, useState} from 'react'
 import {ComponentConfig} from '@/editor/interface'
 import {useComponentConfigStore} from '@/editor/stores'
+import {initStage} from '@editor/utils'
 
 import {Spin} from 'antd'
 import Header from './header'
@@ -46,6 +47,8 @@ const Layout: React.FC = () => {
         // 注册组件到全局
         setComponentConfig(componentConfigRef.current)
         setLoading(false)
+        // 初始页面
+        initStage()
     }
 
     if (loading) {

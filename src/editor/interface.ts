@@ -39,6 +39,10 @@ export interface Component {
      * 父组件id
      */
     parentId?: string
+    /**
+     * 组件描述
+     */
+    description?: string
 }
 
 /**
@@ -91,4 +95,13 @@ export interface ComponentConfig {
      * 组件分类
      */
     category: categoryType
+    /**
+     * 组件默认属性
+     */
+    defaultProps?: defaultProps[]
+}
+
+export type defaultProps = {
+    key: string
+    value: any
 }

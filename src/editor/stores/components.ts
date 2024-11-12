@@ -4,6 +4,14 @@ import {logger} from './loggerMiddleware'
 import {persist, createJSONStorage, devtools} from 'zustand/middleware'
 import {getComponentById} from '@editor/utils'
 
+const defComponent: Component = {
+    id: '1',
+    name: 'Page',
+    description: '页面',
+    props: [],
+    type: 'static'
+}
+
 interface State {
     components: Component[]
     curComponentId?: string | null
@@ -11,6 +19,11 @@ interface State {
 }
 
 interface Action {
+    /**
+     * 初始化画布
+     * @returns
+     */
+    initPage: () => void
     /**
      * 添加组件
      * @param component 组件属性
@@ -39,14 +52,7 @@ const useComponents = create<State & Action>()(
             persist(
                 (set, get) => ({
                     curComponent: null,
-                    components: [
-                        {
-                            id: '1',
-                            name: 'Page',
-                            props: {},
-                            type: 'static'
-                        }
-                    ],
+                    components: [],
                     addComponent: (component, parentId) =>
                         set((state) => {
                             // 如果有父组件id, 则添加到父组件的子组件中
@@ -107,6 +113,13 @@ const useComponents = create<State & Action>()(
                             })
                         }
                         return true
+                    },
+                    initPage() {
+                        set(() => ({
+                            components: [],
+                            curComponentId: null,
+                            curComponent: null
+                        }))
                     }
                 }),
                 {
