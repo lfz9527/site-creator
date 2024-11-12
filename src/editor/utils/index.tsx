@@ -64,11 +64,7 @@ export const getAcceptDrop = (componentName: string) => {
 
 type observeContainerType = (
     cb: (container: HTMLElement, entries?: ResizeObserverEntry[]) => void,
-    option: {
-        containerId?: string
-        containerClassName?: string
-        dataComponentId?: string
-    }
+    option: observeOpt
 ) => {
     resizeObserver: ResizeObserver
     container: HTMLElement
@@ -81,7 +77,7 @@ type observeContainerType = (
  * @returns
  */
 export const observeContainer: observeContainerType = (cb, option) => {
-    const {containerId, containerClassName, dataComponentId} = option
+    const {containerId, containerClassName, dataComponentId, htmlStr} = option
 
     const names = [
         containerId && `#${containerId}`,
@@ -90,7 +86,9 @@ export const observeContainer: observeContainerType = (cb, option) => {
     ]
         .filter(Boolean)
         .join(',')
-    const container = document.querySelector(names!) as HTMLElement
+    const container = htmlStr
+        ? htmlStr
+        : (document.querySelector(names!) as HTMLElement)
     const resizeObserver = new ResizeObserver((entries) => {
         cb && cb(container, entries)
     })
@@ -115,4 +113,33 @@ export const initStage = () => {
         description: Page.description
     }
     addComponent(options)
+}
+
+type debounceType = {
+    (fn: Function, delay: number, immediate?: boolean): Function
+}
+
+export const debounce: debounceType = (fn, delay, immediate = false) => {
+    let timer: any
+
+    return function (...args: any[]) {
+        // @ts-ignore
+        const context = this
+
+        if (timer) {
+            clearTimeout(timer)
+        }
+
+        if (immediate && !timer) {
+            // 如果是立即触发的情况
+            fn.apply(context, args)
+        }
+
+        timer = setTimeout(() => {
+            console.log('context')
+
+            // 最后一次触发
+            fn.apply(context, args)
+        }, delay)
+    }
 }

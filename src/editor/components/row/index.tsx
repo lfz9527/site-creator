@@ -21,7 +21,7 @@ const Row: React.FC<CommonComponentProps> = (props) => {
 
     return (
         <ComponentPageItem {...{...props, isContainer: true}}>
-            <div ref={drop} data-component-id={_id}>
+            <div ref={drop} data-component-id={_id} className='relative'>
                 {isOver && model()}
                 {children && children.length ? children : empty()}
             </div>

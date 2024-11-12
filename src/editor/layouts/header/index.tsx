@@ -1,8 +1,9 @@
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useState, useMemo} from 'react'
 import {Button, Space, Popconfirm} from 'antd'
 import {useStageConfig, useComponents} from '@editor/stores'
 import SvgIcon from '@/editor/common/svg-icon'
 import {initStage} from '@editor/utils'
+import {stageContainerId} from '@editor/enum'
 import './index.less'
 
 interface screens {
@@ -42,8 +43,7 @@ const screenIframe: screens[] = [
 
 const Header = () => {
     const [screens, setScreens] = useState<screens[]>(screenIframe)
-    const {width, setStageWidth} = useStageConfig()
-    const {initPage} = useComponents()
+    const {width} = useStageConfig()
 
     // 屏幕大小列表
     useEffect(() => {
@@ -53,7 +53,6 @@ const Header = () => {
     // 屏幕尺寸变化
     function screenChange(width: number | string) {
         setScreens((scr) => {
-            setStageWidth(width)
             return scr.map((item) => {
                 return {
                     ...item,
@@ -68,7 +67,7 @@ const Header = () => {
 
     // 切换屏幕大小
     const changeScreen = useCallback((screen: any) => {
-        const iframe = document.getElementById('stage-container') as HTMLElement
+        const iframe = document.getElementById(stageContainerId) as HTMLElement
 
         const iframeWrap = iframe?.parentElement as HTMLElement
         const iframeWrapWidth = iframeWrap.offsetWidth - 32

@@ -66,13 +66,13 @@ const Layout: React.FC = () => {
                 <Header />
             </div>
             <div className='flex flex-row w-full h-full'>
-                <div className='w-[400px] h-full flex-shrink-0'>
+                <div className='w-[300px] h-full flex-shrink-0'>
                     <Material />
                 </div>
                 <div className='h-full w-full  p-[16px] flex justify-center content-center'>
                     <Stage />
                 </div>
-                <div className='w-[400px] h-full flex-shrink-0'>
+                <div className='w-[300px] h-full flex-shrink-0'>
                     <Setting />
                 </div>
             </div>

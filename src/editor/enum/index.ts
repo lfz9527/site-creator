@@ -12,3 +12,8 @@ export enum categoryEnum {
      */
     other = '其他组件'
 }
+
+// 画布ID
+export const stageContainerId = 'stage-container'
+// 画布组件布局id
+export const stageComLayoutId = 'stage-com-layout'
