@@ -1,13 +1,17 @@
-import { CommonComponentProps } from "@editor/interface";
+import {CommonComponentProps} from '@editor/interface'
+import {Button as AntdButton} from 'antd'
+import ComponentPageItem from '@editor/common/component-page-item'
 
-import { Button as AntdButton } from "antd";
+const Button: React.FC<CommonComponentProps> = (props) => {
+    const {_id, type, text} = props
 
-const Button = ({ _id, type, text }: CommonComponentProps) => {
-  return (
-    <AntdButton data-component-id={_id} type={type}>
-      {text || "测试按钮文字"}
-    </AntdButton>
-  );
-};
+    return (
+        <ComponentPageItem {...props}>
+            <AntdButton data-component-id={_id} type={type}>
+                {text || '测试按钮文字'}
+            </AntdButton>
+        </ComponentPageItem>
+    )
+}
 
-export default Button;
+export default Button

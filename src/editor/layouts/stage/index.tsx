@@ -37,7 +37,7 @@ const Stage: React.FC = () => {
     // 高度改变时，更新 iframe 高度
     const heightChange = () => {
         const iframeWrap = iframeRef.current?.parentElement as HTMLElement
-        const iframeWrapHeight = iframeWrap.offsetHeight - 32
+        const iframeWrapHeight = iframeWrap.offsetHeight - 33
         setIframeHeight(iframeWrapHeight || 0)
     }
 
@@ -48,6 +48,7 @@ const Stage: React.FC = () => {
         }
     }, [components])
 
+    // 创建遮罩
     useEffect(() => {
         const createMask = (e: any) => {
             e.preventDefault()
@@ -78,6 +79,7 @@ const Stage: React.FC = () => {
         }
     }, [])
 
+    // 创建 hover 遮罩
     useEffect(() => {
         function createMask(e: any) {
             // 获取当前点击的元素
@@ -87,6 +89,7 @@ const Stage: React.FC = () => {
                 const ele = path[i]
                 if (ele.getAttribute && ele.getAttribute('data-component-id')) {
                     const componentId = ele.getAttribute('data-component-id')
+                    console.log('componentId', componentId)
                     if (componentId) {
                         if (curComponentId === componentId) {
                             setHoverComponentId(undefined)
@@ -106,8 +109,8 @@ const Stage: React.FC = () => {
         let container = document.querySelector('#stage-container')
 
         if (container) {
-            container.addEventListener('mouseover', createMask, true)
             container.addEventListener('mouseleave', removerMask)
+            container.addEventListener('mouseover', createMask, true)
         }
         return () => {
             container = document.querySelector('#stage-container')
@@ -162,7 +165,7 @@ const Stage: React.FC = () => {
                 height: iframeHeight + 'px',
                 width: '100%',
                 backgroundColor: '#fff',
-                transition: 'width 0.3s ease-in-out' // 添加过渡效果
+                transition: 'width 0.2s ease-in-out' // 添加过渡效果
             }}
         >
             {renderComponents(components)}

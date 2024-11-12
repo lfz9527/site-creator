@@ -24,6 +24,28 @@ export function getComponentById(
     }
     return null
 }
+/**
+ * 删除指定节点
+ * @param components
+ * @param nodeId
+ * @returns
+ */
+export const delComponentById = (
+    components: Component[],
+    id: string
+): boolean => {
+    for (let i = 0; i < components.length; i++) {
+        const component = components[i]
+        if (component.id === id) {
+            components.splice(i, 1) // 从数组中移除该节点
+            return true
+        } else if (component.children && component.children.length > 0) {
+            const deleted = delComponentById(component.children, id)
+            if (deleted) return true
+        }
+    }
+    return false
+}
 
 /**
  * 获取组件允许拖入的组件

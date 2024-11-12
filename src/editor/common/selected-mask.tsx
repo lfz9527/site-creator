@@ -134,7 +134,9 @@ function SelectedMask(
             top: top - containerTop + container.scrollTop,
             left: left - containerLeft,
             width,
-            height,
+            height: isRoot
+                ? height + container.scrollTop + containerTop
+                : height,
             toolsTop: toolsTop,
             toolsLeft: toolsLeft,
             rootToolsTop: top - containerTop + container.scrollTop + 32,

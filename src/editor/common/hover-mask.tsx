@@ -31,8 +31,17 @@ function SelectedMask(
         toolsLeft: 0
     })
 
+    const maskContainer = document.querySelector(`.${containerClassName}`)!
+
     const {componentConfig} = useComponentConfigStore()
     const {components} = useComponents()
+
+    const curComponent = useMemo(() => {
+        return getComponentById(componentId, components)
+    }, [componentId])
+
+    const curComponentConfig = componentConfig[curComponent?.name || '']
+    const {isRoot, description, name} = curComponentConfig
 
     // 对外暴露更新位置方法
     useImperativeHandle(ref, () => ({
@@ -68,6 +77,7 @@ function SelectedMask(
 
         // 获取节点位置
         const {top, left, width, height} = node.getBoundingClientRect()
+
         // 获取容器位置
         const {top: containerTop, left: containerLeft} =
             container.getBoundingClientRect()
@@ -75,9 +85,7 @@ function SelectedMask(
         let toolsTop = top - containerTop + container.scrollTop
         const toolsLeft = left - containerLeft + width
         if (toolsTop <= 0) {
-            toolsTop += height + 18
-        } else {
-            toolsTop = toolsTop - 2
+            toolsTop += height + 22
         }
 
         setPosition({
@@ -90,17 +98,10 @@ function SelectedMask(
         })
     }
 
-    const curComponent = useMemo(() => {
-        return getComponentById(componentId, components)
-    }, [componentId])
-
-    const curComponentConfig = componentConfig[curComponent?.name || '']
-    const {isRoot, description, name} = curComponentConfig
-
     return createPortal(
         <>
             <div
-                className='absolute bg-red bg-[rgba(66, 133, 244, 0.04)] border-2 border-dashed border-[var(--edit-primary-color)] pointer-events-none z-120 rounded-[4px] box-border'
+                className='absolute bg-red bg-[rgba(66, 133, 244, 0.04)] border-2 border-dashed border-[var(--edit-primary-color)] pointer-events-none z-[120] rounded-[4px] box-border'
                 style={{
                     left: position.left,
                     top: position.top,
@@ -109,23 +110,22 @@ function SelectedMask(
                 }}
             />
             <div
-                className='absolute -translate-x-full -translate-y-full z-120'
+                className='absolute -translate-x-full -translate-y-full z-[120]'
                 style={{
-                    left: isRoot ? position.width : position.toolsLeft,
-                    top: isRoot ? position.top : position.toolsTop,
+                    left: isRoot ? position.width - 16 : position.toolsLeft,
+                    top: isRoot ? position.top + 36 : position.toolsTop,
                     display:
                         !position.width || position.width < 10
                             ? 'none'
                             : 'inline'
                 }}
             >
-                <div className='px-[4px] py-0 bg-[var(--edit-primary-color)] rounded-[2px] text-white text-xs cursor-pointer space whitespace-nowrap'>
+                <span className='px-[4px] py-0 bg-[var(--edit-primary-color)] rounded-[2px] text-white text-xs  whitespace-nowrap'>
                     {description || name}
-                </div>
+                </span>
             </div>
         </>,
-
-        document.querySelector(`.${containerClassName}`)!
+        maskContainer!
     )
 }
 

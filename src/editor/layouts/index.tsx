@@ -1,6 +1,6 @@
 import React, {useRef, useEffect, useState} from 'react'
 import {ComponentConfig} from '@/editor/interface'
-import {useComponentConfigStore} from '@/editor/stores'
+import {useComponentConfigStore, useComponents} from '@/editor/stores'
 import {initStage} from '@editor/utils'
 
 import {Spin} from 'antd'
@@ -15,6 +15,7 @@ const Layout: React.FC = () => {
     const [loading, setLoading] = useState(true)
     const componentConfigRef = useRef<any>({})
     const {setComponentConfig} = useComponentConfigStore()
+    const {components} = useComponents()
 
     useEffect(() => {
         loadComponentConfig()
@@ -48,7 +49,7 @@ const Layout: React.FC = () => {
         setComponentConfig(componentConfigRef.current)
         setLoading(false)
         // 初始页面
-        initStage()
+        if (components.length === 0) initStage()
     }
 
     if (loading) {

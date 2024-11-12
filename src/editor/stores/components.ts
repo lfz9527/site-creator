@@ -2,15 +2,7 @@ import {create} from 'zustand'
 import {Component} from '@editor/interface'
 import {logger} from './loggerMiddleware'
 import {persist, createJSONStorage, devtools} from 'zustand/middleware'
-import {getComponentById} from '@editor/utils'
-
-const defComponent: Component = {
-    id: '1',
-    name: 'Page',
-    description: '页面',
-    props: [],
-    type: 'static'
-}
+import {getComponentById, delComponentById} from '@editor/utils'
 
 interface State {
     components: Component[]
@@ -44,6 +36,13 @@ interface Action {
      * @returns
      */
     deleteComponent: (componentId: string) => boolean
+    /**
+     * 插入组件
+     * @param targetId 目标组件id
+     * @param curComponentId 需要移动的组件id
+     * @returns
+     */
+    insertComponent: (targetId: string, curComponentId: string) => boolean
 }
 
 const useComponents = create<State & Action>()(
@@ -113,6 +112,49 @@ const useComponents = create<State & Action>()(
                             })
                         }
                         return true
+                    },
+                    insertComponent: (targetId, curComponentId) => {
+                        let bool = true
+                        set((state) => {
+                            const components = JSON.parse(
+                                JSON.stringify(get().components)
+                            )
+                            // 找到目标节点和源节点
+                            const target = getComponentById(
+                                targetId,
+                                components
+                            )
+                            const toMoveCom = getComponentById(
+                                curComponentId,
+                                components
+                            )
+
+                            // 如果目标节点和源节点是同一个节点，则不移动
+                            const noMove = toMoveCom?.parentId === targetId
+                            if (noMove) return {components}
+
+                            if (!target || !toMoveCom) {
+                                bool = false
+                                return {components}
+                            }
+
+                            console.log(targetId, curComponentId)
+
+                            // 删除源节点
+                            delComponentById(components, curComponentId)
+
+                            // 将源节点添加到目标节点的 children 中
+                            if (!target.children) {
+                                target.children = []
+                            }
+                            toMoveCom.parentId = targetId
+                            target.children.push(toMoveCom)
+
+                            return {
+                                components: state.components
+                            }
+                        })
+                        return bool
                     },
                     initPage() {
                         set(() => ({
