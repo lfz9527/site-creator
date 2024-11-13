@@ -12,6 +12,7 @@ import {getComponentById} from '@editor/utils'
 import {checkValid} from './utils'
 import {useObserve, useResize, useDebounce} from '@editor/hooks'
 import {DeleteOutlined} from '@ant-design/icons'
+import MaskTag from './mask-tag'
 
 interface Props {
     // 组件id
@@ -23,7 +24,6 @@ interface Props {
 const SelectMask = forwardRef<HTMLDivElement, Omit<Props, 'ref'>>(
     (props, ref) => {
         const {componentId, containerClassName} = props
-        const toolRef = useRef<HTMLDivElement>(null)
         const {componentConfig} = useComponentConfigStore()
         const debouncedSetSearchTerm = useDebounce(updatePosition, 250)
 
@@ -113,15 +113,6 @@ const SelectMask = forwardRef<HTMLDivElement, Omit<Props, 'ref'>>(
             updatePosition
         }))
 
-        // @ts-ignore
-        const MaskTag = ({children}) => {
-            return (
-                <div className='flex items-center justify-center px-[4px] h-[20px] bg-[var(--edit-primary-color)] whitespace-nowrap'>
-                    {children}
-                </div>
-            )
-        }
-
         if (maskContainer) {
             return createPortal(
                 <>
@@ -139,17 +130,12 @@ const SelectMask = forwardRef<HTMLDivElement, Omit<Props, 'ref'>>(
                         </div>
                     )}
                     <div
-                        ref={toolRef}
                         className='absolute text-[14px] z-11 -translate-y-full -translate-x-full'
                         style={ToolPos}
                     >
                         {!isRoot && (
                             <div className='flex items-center justify-center gap-[5px]'>
-                                <MaskTag>
-                                    <span className='text-xs text-white z-11'>
-                                        {description}
-                                    </span>
-                                </MaskTag>
+                                <MaskTag>{description}</MaskTag>
                                 <MaskTag>
                                     <div
                                         className='cursor-pointer'

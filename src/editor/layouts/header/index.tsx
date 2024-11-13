@@ -1,6 +1,6 @@
-import {useCallback, useEffect, useState, useMemo} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {Button, Space, Popconfirm} from 'antd'
-import {useStageConfig, useComponents} from '@editor/stores'
+import {useStageConfig} from '@editor/stores'
 import SvgIcon from '@/editor/common/svg-icon'
 import {initStage} from '@editor/utils'
 import {stageContainerId} from '@editor/enum'

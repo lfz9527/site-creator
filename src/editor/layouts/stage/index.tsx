@@ -1,15 +1,11 @@
 import React, {useRef, useState, useEffect} from 'react'
 import {useResize, useObserve, useStageMask} from '@editor/hooks'
-import {
-    useComponents,
-    useComponentConfigStore,
-    useStageConfig
-} from '@editor/stores'
+import {useComponents, useStageConfig} from '@editor/stores'
 import {stageContainerId, stageComLayoutId} from '@editor/enum'
 
 import StageContainer from './stage-container'
 import SelectedMask from '@/editor/common/mask/selected'
-import HoverMask from '@editor/common/hover-mask'
+import HoverMask from '@/editor/common/mask/hover'
 
 const Stage: React.FC = () => {
     const wrapRef = useRef<HTMLDivElement>(null)
@@ -57,7 +53,7 @@ const Stage: React.FC = () => {
         <div
             ref={wrapRef}
             id={stageContainerId}
-            className='relative w-full h-full bg-white overflow-hidden'
+            className='relative w-full h-full overflow-hidden bg-white'
             style={{
                 ...tranStyle
             }}
@@ -82,13 +78,13 @@ const Stage: React.FC = () => {
                     ref={maskRef}
                 />
             )}
-            {/* {hoverComponentId && (
+            {hoverComponentId && (
                 <HoverMask
-                    containerClassName={selectHoverContainer}
+                    containerClassName={containerClassName}
                     ref={maskRef}
                     componentId={hoverComponentId}
                 />
-            )} */}
+            )}
         </div>
     )
 }

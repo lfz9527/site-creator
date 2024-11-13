@@ -4,6 +4,7 @@ import {message} from 'antd'
 
 type PageItemType = {
     isContainer?: boolean
+    children?: React.ReactNode
 }
 type Props = CommonComponentProps & PageItemType
 
