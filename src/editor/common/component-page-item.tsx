@@ -27,7 +27,7 @@ const Button: React.FC<Props> = (props) => {
     return (
         <>
             {contextHolder}
-            <div ref={drag} style={styles}>
+            <div ref={drag} style={styles} className='relative'>
                 {children}
             </div>
         </>

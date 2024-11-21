@@ -4,3 +4,5 @@ type observeOpt = {
     dataComponentId?: string
     htmlStr?: HTMLElement
 }
+
+type dropZoneType = 'horizontal' | 'vertical'

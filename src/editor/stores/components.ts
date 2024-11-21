@@ -2,7 +2,7 @@ import {create} from 'zustand'
 import {Component} from '@editor/interface'
 import {logger} from './loggerMiddleware'
 import {persist, createJSONStorage, devtools} from 'zustand/middleware'
-import {getComponentById, delComponentById} from '@editor/utils'
+import {getComponentById, findNodeAndParent} from '@editor/utils'
 
 interface State {
     components: Component[]
@@ -42,7 +42,11 @@ interface Action {
      * @param curComponentId 需要移动的组件id
      * @returns
      */
-    insertComponent: (targetId: string, curComponentId: string) => boolean
+    insertComponent: (
+        targetId: string,
+        curComponentId: string,
+        moveType?: dropZoneType | null
+    ) => boolean
 }
 
 const useComponents = create<State & Action>()(
@@ -113,7 +117,7 @@ const useComponents = create<State & Action>()(
                         }
                         return true
                     },
-                    insertComponent: (targetId, curComponentId) => {
+                    insertComponent: (targetId, curComponentId, moveType) => {
                         let bool = true
                         set(() => {
                             const components = JSON.parse(
@@ -123,44 +127,87 @@ const useComponents = create<State & Action>()(
                             console.log('移动到目标节点id', targetId)
                             console.log('被移动的节点id', curComponentId)
 
-                            // 移动到目标节点
-                            const target = getComponentById(
-                                targetId,
-                                components
-                            )
+                            bool = false
 
-                            // 被移动的节点
-                            const toMoveCom = getComponentById(
+                            // 查找目标节点和父节点
+                            const {curCom, curParentCom} = findNodeAndParent(
                                 curComponentId,
                                 components
                             )
 
-                            console.log('目标节点', target)
-                            console.log('被移动的节点', toMoveCom)
-
-                            // 如果目标节点和源节点是同一个节点，则不移动
-                            const noMove = toMoveCom?.parentId === targetId
-
-                            // 自己覆盖自己则不移动
-                            const isCoverSelf = targetId === curComponentId
-
-                            if (noMove || isCoverSelf) return {components}
-
-                            // 如果目标节点和源节点不存在，则不移动
-                            if (!target || !toMoveCom) {
+                            if (!curCom) {
                                 bool = false
-                                return {components}
+                                return {
+                                    components
+                                }
+                            }
+                            console.log('curCom', curCom)
+                            console.log('curParentCom', curParentCom)
+
+                            // 查找新父节点
+                            const {
+                                curCom: targetCom,
+                                curParentCom: targetParentCom
+                            } = findNodeAndParent(targetId, components)
+
+                            if (!targetCom) {
+                                bool = false
+                                return {
+                                    components
+                                }
                             }
 
-                            // 删除源节点
-                            delComponentById(components, curComponentId)
-
-                            // 将源节点添加到目标节点的 children 中
-                            if (!target.children) {
-                                target.children = []
+                            // 删除旧父节点中的目标节点
+                            // @ts-ignore
+                            const targetIndex = curParentCom.children.findIndex(
+                                (child) => child.id === targetId
+                            )
+                            if (targetIndex !== -1) {
+                                // @ts-ignore
+                                curParentCom.children.splice(targetIndex, 1)
                             }
-                            toMoveCom.parentId = targetId
-                            target.children.push(toMoveCom)
+
+                            console.log('targetCom', targetCom)
+                            console.log('targetParentCom', targetParentCom)
+
+                            // // 移动到目标节点
+                            // const target = getComponentById(
+                            //     targetId,
+                            //     components
+                            // )
+
+                            // // 被移动的节点
+                            // const toMoveCom = getComponentById(
+                            //     curComponentId,
+                            //     components
+                            // )
+
+                            // // 如果目标节点和源节点不存在，则不移动
+                            // if (!target || !toMoveCom) {
+                            //     bool = false
+                            //     return {components}
+                            // }
+
+                            // // 如果目标节点和源节点是同一个节点，则不移动
+                            // const noMove = toMoveCom?.parentId === targetId
+
+                            // // 自己覆盖自己则不移动
+                            // const isCoverSelf = targetId === curComponentId
+
+                            // if (noMove || isCoverSelf) return {components}
+
+                            // if (moveType === 'horizontal') {
+                            // }
+
+                            // // 删除源节点
+                            // delComponentById(components, curComponentId)
+
+                            // // 将源节点添加到目标节点的 children 中
+                            // if (!target.children) {
+                            //     target.children = []
+                            // }
+                            // toMoveCom.parentId = targetId
+                            // target.children.push(toMoveCom)
 
                             return {
                                 components

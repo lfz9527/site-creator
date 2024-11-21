@@ -48,6 +48,40 @@ export const delComponentById = (
 }
 
 /**
+ * 查找指定ID的节点及其父节点
+ * @param id
+ * @param components
+ */
+export const findNodeAndParent = (
+    id: string,
+    components: Component[]
+): {
+    curCom: Component
+    curParentCom: Component
+} => {
+    // 找不到父组件，就返回根组件
+    let result = {
+        curCom: components[0],
+        curParentCom: components[0]
+    }
+    const traverse = (nodes: Component[], parent = components[0]) => {
+        for (const node of nodes) {
+            if (node.id === id) {
+                result = {curCom: node, curParentCom: parent}
+                return
+            }
+            if (node && node.children && node.children.length > 0) {
+                traverse(node.children, node)
+            }
+        }
+    }
+
+    traverse(components)
+
+    return result
+}
+
+/**
  * 获取组件允许拖入的组件
  * @param componentName 组件名
  * @returns
@@ -113,33 +147,4 @@ export const initStage = () => {
         description: Page.description
     }
     addComponent(options)
-}
-
-type debounceType = {
-    (fn: Function, delay: number, immediate?: boolean): Function
-}
-
-export const debounce: debounceType = (fn, delay, immediate = false) => {
-    let timer: any
-
-    return function (...args: any[]) {
-        // @ts-ignore
-        const context = this
-
-        if (timer) {
-            clearTimeout(timer)
-        }
-
-        if (immediate && !timer) {
-            // 如果是立即触发的情况
-            fn.apply(context, args)
-        }
-
-        timer = setTimeout(() => {
-            console.log('context')
-
-            // 最后一次触发
-            fn.apply(context, args)
-        }, delay)
-    }
 }

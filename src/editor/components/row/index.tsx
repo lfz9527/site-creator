@@ -1,6 +1,7 @@
 import {useDrop} from '@/editor/hooks'
 import {CommonComponentProps} from '@editor/interface'
 import ComponentPageItem from '@editor/common/component-page-item'
+import DropZone from '@/editor/common/dropZone'
 import './index.css'
 
 const Row: React.FC<CommonComponentProps> = (props) => {
@@ -14,25 +15,27 @@ const Row: React.FC<CommonComponentProps> = (props) => {
             </div>
         )
     }
-
     const model = () => {
         return <div className='canDrop' />
     }
 
     return (
-        <ComponentPageItem {...{...props, isContainer: true}}>
-            <div
-                ref={drop}
-                data-component-id={_id}
-                className='relative'
-                style={{
-                    display: 'flex'
-                }}
-            >
-                {isOver && model()}
-                {children && children.length ? children : empty()}
-            </div>
-        </ComponentPageItem>
+        <>
+            <ComponentPageItem {...{...props, isContainer: true}}>
+                <DropZone ref={drop} direction='horizontal' {...{_id, _name}} />
+                <div
+                    ref={drop}
+                    data-component-id={_id}
+                    className='relative'
+                    style={{
+                        display: 'flex'
+                    }}
+                >
+                    {isOver && model()}
+                    {children && children.length ? children : empty()}
+                </div>
+            </ComponentPageItem>
+        </>
     )
 }
 

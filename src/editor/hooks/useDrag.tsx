@@ -1,6 +1,12 @@
 import {useDrag as useDndDrag} from 'react-dnd'
 import {useComponents} from '@editor/stores'
 
+const validDirect = (id: string): dropZoneType | null => {
+    const [, direct] = id?.split('-') || []
+    if (!direct) return null
+    return direct as dropZoneType
+}
+
 /**
  *
  * @param id
@@ -24,7 +30,16 @@ const useDrag = (
                 [key: string]: any
             } = {id: '', ...dropResult}
 
-            const insert = insertComponent(option.id, id)
+            const direct = validDirect(option.id)
+            let targetId = option.id
+
+            if (direct) {
+                targetId = option.id.replace(/-vertical|-horizontal/, '')
+            }
+
+            console.log('targetId', targetId, id)
+
+            const insert = insertComponent(targetId, id, direct)
 
             onDragEnd && onDragEnd(insert)
         },

@@ -1,0 +1,14 @@
+.drop-zone-horizontal {
+    height: 20px;
+    width: 100%;
+}
+.drop-zone-vertical {
+    width: 20px;
+}
+.drop-zone {
+    position: absolute;
+    z-index: 1;
+    &.focus {
+        background: var(--edit-primary-color);
+    }
+}
