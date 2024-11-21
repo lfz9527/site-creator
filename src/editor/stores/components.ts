@@ -115,30 +115,42 @@ const useComponents = create<State & Action>()(
                     },
                     insertComponent: (targetId, curComponentId) => {
                         let bool = true
-                        set((state) => {
+                        set(() => {
                             const components = JSON.parse(
                                 JSON.stringify(get().components)
                             )
-                            // 找到目标节点和源节点
+
+                            console.log('移动到目标节点id', targetId)
+                            console.log('被移动的节点id', curComponentId)
+
+                            // 移动到目标节点
                             const target = getComponentById(
                                 targetId,
                                 components
                             )
+
+                            // 被移动的节点
                             const toMoveCom = getComponentById(
                                 curComponentId,
                                 components
                             )
 
+                            console.log('目标节点', target)
+                            console.log('被移动的节点', toMoveCom)
+
                             // 如果目标节点和源节点是同一个节点，则不移动
                             const noMove = toMoveCom?.parentId === targetId
-                            if (noMove) return {components}
 
+                            // 自己覆盖自己则不移动
+                            const isCoverSelf = targetId === curComponentId
+
+                            if (noMove || isCoverSelf) return {components}
+
+                            // 如果目标节点和源节点不存在，则不移动
                             if (!target || !toMoveCom) {
                                 bool = false
                                 return {components}
                             }
-
-                            console.log(targetId, curComponentId)
 
                             // 删除源节点
                             delComponentById(components, curComponentId)
@@ -151,7 +163,7 @@ const useComponents = create<State & Action>()(
                             target.children.push(toMoveCom)
 
                             return {
-                                components: state.components
+                                components
                             }
                         })
                         return bool
