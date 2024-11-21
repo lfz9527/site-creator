@@ -69,7 +69,7 @@ const ComponentItem: React.FC<ComponentItemProps> = (props) => {
                     height: 20
                 }}
             />
-            <p>{description}</p>
+            <p className='text-center'>{description}</p>
         </div>
     )
 }

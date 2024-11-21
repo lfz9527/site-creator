@@ -9,7 +9,7 @@ type PageItemType = {
 type Props = CommonComponentProps & PageItemType
 
 const Button: React.FC<Props> = (props) => {
-    const {children, _id, _name, isContainer} = props
+    const {children, _id, _name, isContainer, comPageStyle = {}} = props
     const [messageApi, contextHolder] = message.useMessage()
     const {drag} = useDrag(_id, _name, (insert) => {
         !insert &&
@@ -20,7 +20,8 @@ const Button: React.FC<Props> = (props) => {
     })
 
     const styles = {
-        display: isContainer ? 'block' : 'inline-block'
+        display: isContainer ? 'block' : 'inline-block',
+        ...comPageStyle
     }
 
     return (
