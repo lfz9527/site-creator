@@ -58,6 +58,8 @@ const SelectMask = forwardRef<HTMLDivElement, Omit<Props, 'ref'>>(
         }, [componentId])
 
         useResize(() => {
+            console.log('useResize')
+
             updatePosition()
         })
 
@@ -65,14 +67,19 @@ const SelectMask = forwardRef<HTMLDivElement, Omit<Props, 'ref'>>(
             debouncedSetSearchTerm()
         })
 
+        // 修复因为滚动条导致的位置不正确
+        useObserve(() => updatePosition(), {
+            containerClassName: containerClassName
+        })
+
         function updatePosition() {
             const valid = checkValid(componentId)
             if (!valid) return
 
             const {node, comLayout} = valid
-
             // 获取节点位置
             const {top, left, width, height} = node.getBoundingClientRect()
+
             // 获取容器位置
             const {top: cTop, left: cLeft} = comLayout.getBoundingClientRect()
 
@@ -83,7 +90,7 @@ const SelectMask = forwardRef<HTMLDivElement, Omit<Props, 'ref'>>(
             setMaskPos({
                 top: realTop,
                 left: left - cLeft,
-                width,
+                width: isRoot ? width - 2 : width,
                 height: maskHeight
             })
             setRootToolPos({

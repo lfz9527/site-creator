@@ -41,7 +41,7 @@ const StageContainer = () => {
         })
     }
 
-    return <>{renderComponents(components)}</>
+    return renderComponents(components)
 }
 
 export default StageContainer

@@ -8,7 +8,7 @@ export default (ctx: Context) => {
         icon: '',
         description: '按钮',
         component: Button,
-        allowDrag: [ItemType.Page, ItemType.Row],
+        allowDrag: [ItemType.Page, ItemType.Row, ItemType.Col],
         comType: 'static',
         category: 'basic',
         defaultProps: [

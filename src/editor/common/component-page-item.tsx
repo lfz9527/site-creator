@@ -2,13 +2,16 @@ import {CommonComponentProps} from '@editor/interface'
 import {useDrag} from '@editor/hooks'
 import {message} from 'antd'
 
+import React from 'react'
+
 type PageItemType = {
     isContainer?: boolean
+    direction?: dropZoneType
     children?: React.ReactNode
 }
 type Props = CommonComponentProps & PageItemType
 
-const Button: React.FC<Props> = (props) => {
+const ComponentPageItem: React.FC<Props> = (props) => {
     const {children, _id, _name, isContainer, comPageStyle = {}} = props
     const [messageApi, contextHolder] = message.useMessage()
     const {drag} = useDrag(_id, _name, (insert) => {
@@ -25,13 +28,11 @@ const Button: React.FC<Props> = (props) => {
     }
 
     return (
-        <>
+        <div ref={drag} style={styles} className='relative'>
             {contextHolder}
-            <div ref={drag} style={styles} className='relative'>
-                {children}
-            </div>
-        </>
+            {children}
+        </div>
     )
 }
 
-export default Button
+export default ComponentPageItem

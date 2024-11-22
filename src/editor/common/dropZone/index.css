@@ -4,11 +4,12 @@
 }
 .drop-zone-vertical {
     width: 20px;
+    height: 100%;
 }
 .drop-zone {
-    position: absolute;
-    z-index: 1;
+    /* position: absolute;
+    z-index: 1; */
     &.focus {
-        background: var(--edit-primary-color);
+        background: #197aff;
     }
 }

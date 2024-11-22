@@ -15,6 +15,7 @@ const DropZone: React.FC<DropZoneProps> = (props) => {
 
     return (
         <div
+            id='drop-zone'
             ref={drop}
             className={`drop-zone ${className} ${isOver ? 'focus' : ''}`}
         ></div>

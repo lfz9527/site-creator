@@ -2,7 +2,11 @@ import {create} from 'zustand'
 import {Component} from '@editor/interface'
 import {logger} from './loggerMiddleware'
 import {persist, createJSONStorage, devtools} from 'zustand/middleware'
-import {getComponentById, findNodeAndParent} from '@editor/utils'
+import {
+    getComponentById,
+    findNodeAndParent,
+    delComponentById
+} from '@editor/utils'
 
 interface State {
     components: Component[]
@@ -127,7 +131,8 @@ const useComponents = create<State & Action>()(
                             console.log('移动到目标节点id', targetId)
                             console.log('被移动的节点id', curComponentId)
 
-                            bool = false
+                            // 如果目标节点和源节点是同一个节点，则不移动
+                            if (curComponentId === targetId) return {components}
 
                             // 查找目标节点和父节点
                             const {curCom, curParentCom} = findNodeAndParent(
@@ -141,8 +146,6 @@ const useComponents = create<State & Action>()(
                                     components
                                 }
                             }
-                            console.log('curCom', curCom)
-                            console.log('curParentCom', curParentCom)
 
                             // 查找新父节点
                             const {
@@ -159,56 +162,49 @@ const useComponents = create<State & Action>()(
 
                             // 删除旧父节点中的目标节点
                             // @ts-ignore
-                            const targetIndex = curParentCom.children.findIndex(
-                                (child) => child.id === targetId
+                            const curIndex = curParentCom.children.findIndex(
+                                (child) => child.id === curComponentId
                             )
-                            if (targetIndex !== -1) {
+                            if (curIndex !== -1) {
                                 // @ts-ignore
-                                curParentCom.children.splice(targetIndex, 1)
+                                curParentCom.children.splice(curIndex, 1)
                             }
-
                             console.log('targetCom', targetCom)
                             console.log('targetParentCom', targetParentCom)
 
-                            // // 移动到目标节点
-                            // const target = getComponentById(
-                            //     targetId,
-                            //     components
-                            // )
+                            console.log('moveType', moveType)
 
-                            // // 被移动的节点
-                            // const toMoveCom = getComponentById(
-                            //     curComponentId,
-                            //     components
-                            // )
+                            if (moveType === 'horizontal') {
+                                // 行移动
+                                curCom.parentId = targetParentCom.id
 
-                            // // 如果目标节点和源节点不存在，则不移动
-                            // if (!target || !toMoveCom) {
-                            //     bool = false
-                            //     return {components}
-                            // }
+                                if (!targetParentCom.children) {
+                                    targetParentCom.children = []
+                                }
+                                const targetIndex =
+                                    targetParentCom.children.findIndex(
+                                        (child) => child.id === targetId
+                                    )
 
-                            // // 如果目标节点和源节点是同一个节点，则不移动
-                            // const noMove = toMoveCom?.parentId === targetId
-
-                            // // 自己覆盖自己则不移动
-                            // const isCoverSelf = targetId === curComponentId
-
-                            // if (noMove || isCoverSelf) return {components}
-
-                            // if (moveType === 'horizontal') {
-                            // }
-
-                            // // 删除源节点
-                            // delComponentById(components, curComponentId)
-
-                            // // 将源节点添加到目标节点的 children 中
-                            // if (!target.children) {
-                            //     target.children = []
-                            // }
-                            // toMoveCom.parentId = targetId
-                            // target.children.push(toMoveCom)
-
+                                if (targetIndex === -1) {
+                                    targetParentCom.children.push(curCom)
+                                } else {
+                                    targetParentCom.children.splice(
+                                        targetIndex,
+                                        0,
+                                        curCom
+                                    )
+                                }
+                            } else if (moveType === 'vertical') {
+                                // 列移动
+                            } else {
+                                // 层级嵌套
+                                curCom.parentId = targetCom.id
+                                if (!targetCom.children) {
+                                    targetCom.children = []
+                                }
+                                targetCom.children.push(curCom)
+                            }
                             return {
                                 components
                             }

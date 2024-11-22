@@ -20,8 +20,6 @@ const Material: React.FC = () => {
         props: any
         type: ComType
     }) => {
-        console.log('dropResult.id', dropResult.id)
-
         const component = {
             id: String(new Date().getTime()),
             name: dropResult.name,
@@ -71,7 +69,6 @@ const Material: React.FC = () => {
             }
             items.push(col)
         }
-
         return items
     }, [componentConfig])
 
