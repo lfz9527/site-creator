@@ -4,6 +4,8 @@ import ComponentPageItem from '@editor/common/component-page-item'
 import {useComponents} from '@editor/stores'
 import {useRef, useEffect} from 'react'
 import {useScroll} from '@editor/hooks'
+import CanDrop from '@/editor/common/canDrop'
+import Empty from '@/editor/common/empty'
 
 import './index.css'
 
@@ -26,17 +28,6 @@ const Row: React.FC<CommonComponentProps> = (props) => {
         rowRef.current as unknown as HTMLElement
     )
 
-    const empty = () => {
-        return (
-            <div className='h-[100px] bg-[#f0f0f0] flex justify-center items-center text-xs text-[#a7b1bd] select-none px-[10px] w-full box-border border-[1px] border-dotted border-[rgb(167, 177, 189)]'>
-                拖拽组件或容器到此处{_id}
-            </div>
-        )
-    }
-    const model = () => {
-        return <div className='canDrop' />
-    }
-
     return (
         <ComponentPageItem {...{...props, isContainer: true}}>
             <div
@@ -48,8 +39,8 @@ const Row: React.FC<CommonComponentProps> = (props) => {
                     overflowX: 'auto'
                 }}
             >
-                {isOver && model()}
-                {children && children.length ? children : empty()}
+                {isOver && <CanDrop />}
+                {children && children.length ? children : <Empty _id={_id} />}
             </div>
         </ComponentPageItem>
     )

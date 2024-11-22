@@ -6,3 +6,5 @@ type observeOpt = {
 }
 
 type dropZoneType = 'horizontal' | 'vertical'
+
+type insertPositionType = 'top' | 'left' | 'right' | 'bottom'

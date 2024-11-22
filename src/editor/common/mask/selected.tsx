@@ -136,7 +136,7 @@ const SelectMask = forwardRef<HTMLDivElement, Omit<Props, 'ref'>>(
                         </div>
                     )}
                     <div
-                        className='absolute text-[14px] z-11 -translate-y-full -translate-x-full'
+                        className='absolute text-[14px] z-[100] -translate-y-full -translate-x-full'
                         style={ToolPos}
                     >
                         {!isRoot && (
