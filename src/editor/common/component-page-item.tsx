@@ -1,5 +1,5 @@
 import {CommonComponentProps} from '@editor/interface'
-import {useDrag} from '@editor/hooks'
+import {useDrag, useDrop} from '@editor/hooks'
 import {message} from 'antd'
 
 import React from 'react'
@@ -14,6 +14,7 @@ type Props = CommonComponentProps & PageItemType
 const ComponentPageItem: React.FC<Props> = (props) => {
     const {children, _id, _name, isContainer, comPageStyle = {}} = props
     const [messageApi, contextHolder] = message.useMessage()
+    const {drop} = useDrop(_id, _name)
     const {drag} = useDrag(_id, _name, (insert) => {
         !insert &&
             messageApi.open({
@@ -28,7 +29,11 @@ const ComponentPageItem: React.FC<Props> = (props) => {
     }
 
     return (
-        <div ref={drag} style={styles} className='relative'>
+        <div
+            ref={(node) => drag(drop(node))}
+            style={styles}
+            className='relative'
+        >
             {contextHolder}
             {children}
         </div>
