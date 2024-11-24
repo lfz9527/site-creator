@@ -2,7 +2,7 @@ import {CommonComponentProps} from '@editor/interface'
 import {useDrag, useDrop} from '@editor/hooks'
 import {message} from 'antd'
 
-import React from 'react'
+import React, {useEffect} from 'react'
 
 type PageItemType = {
     isContainer?: boolean
@@ -28,8 +28,13 @@ const ComponentPageItem: React.FC<Props> = (props) => {
         ...comPageStyle
     }
 
+    useEffect(() => {
+        console.log(2234)
+    }, [drag])
+
     return (
         <div
+            onDragOver={(e) => e.preventDefault()}
             ref={(node) => drag(drop(node))}
             style={styles}
             className='relative'
