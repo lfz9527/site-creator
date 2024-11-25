@@ -43,8 +43,8 @@ const ComponentPageItem: React.FC<Props> = (props) => {
 
     return (
         <div
-            // ref={(node) => drag(drop(node))}
-            ref={drop}
+            ref={(node) => drag(drop(node))}
+            // ref={drop}
             style={styles}
             data-component-id={_id}
         >
