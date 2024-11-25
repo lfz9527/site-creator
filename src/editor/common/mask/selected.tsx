@@ -88,8 +88,6 @@ const SelectMask = forwardRef<HTMLDivElement, Omit<Props, 'ref'>>(
             const {width: toolWidth = 0} =
                 toolRef?.current?.getBoundingClientRect() ?? {}
 
-            console.log('toolWidth', toolWidth)
-
             let realTop = top - cTop + comLayout.scrollTop
 
             const maskHeight = isRoot ? comLayout.scrollHeight : height
@@ -149,9 +147,6 @@ const SelectMask = forwardRef<HTMLDivElement, Omit<Props, 'ref'>>(
                     style={ToolPos}
                 >
                     <div className='flex items-center justify-center gap-[5px]'>
-                        <MaskTag>{curComConfig?.description}</MaskTag>
-                        <MaskTag>{curComConfig?.description}</MaskTag>
-                        <MaskTag>{curComConfig?.description}</MaskTag>
                         <MaskTag>{curComConfig?.description}</MaskTag>
                         <MaskTag>
                             <div

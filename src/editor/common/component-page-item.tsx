@@ -1,20 +1,33 @@
 import {CommonComponentProps} from '@editor/interface'
 import {useDrag, useDrop} from '@editor/hooks'
+import Empty from '@/editor/common/empty'
 import {message} from 'antd'
+import CanDrop from './canDrop'
 
-import React, {useEffect} from 'react'
+import React from 'react'
 
 type PageItemType = {
     isContainer?: boolean
     direction?: dropZoneType
+    hasChild: boolean
+    canDrop?: React.ReactNode
+    empty?: React.ReactNode
     children?: React.ReactNode
 }
 type Props = CommonComponentProps & PageItemType
 
 const ComponentPageItem: React.FC<Props> = (props) => {
-    const {children, _id, _name, isContainer, comPageStyle = {}} = props
+    const {
+        children,
+        _id,
+        _name,
+        isContainer,
+        comPageStyle = {},
+        hasChild = false,
+        empty = <Empty _id={_id} />
+    } = props
     const [messageApi, contextHolder] = message.useMessage()
-    const {drop} = useDrop(_id, _name)
+    const {drop, isOverCurrent, isOver} = useDrop(_id, _name)
     const {drag} = useDrag(_id, _name, (insert) => {
         !insert &&
             messageApi.open({
@@ -28,18 +41,16 @@ const ComponentPageItem: React.FC<Props> = (props) => {
         ...comPageStyle
     }
 
-    useEffect(() => {
-        console.log(2234)
-    }, [drag])
+    const isCover = isOverCurrent || isOver
 
     return (
         <div
             ref={(node) => drag(drop(node))}
             style={styles}
-            className='relative'
+            data-component-id={_id}
         >
             {contextHolder}
-            {children}
+            {hasChild ? children : isCover ? <CanDrop /> : empty}
         </div>
     )
 }

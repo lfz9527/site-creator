@@ -1,25 +1,15 @@
-import {useDrop} from '@/editor/hooks'
 import {CommonComponentProps} from '@editor/interface'
 import ComponentPageItem from '@editor/common/component-page-item'
 import {useComponents} from '@editor/stores'
-import {useRef, useEffect} from 'react'
+import {useRef} from 'react'
 import {useScroll} from '@editor/hooks'
-import CanDrop from '@/editor/common/canDrop'
-import Empty from '@/editor/common/empty'
-
 import './index.css'
 
 const Row: React.FC<CommonComponentProps> = (props) => {
-    const {children, _id, _name} = props
+    const {children} = props
     const {setCurComponentId, curComponentId} = useComponents()
-    const {drop, isOver} = useDrop(_id, _name)
     const rowRef = useRef(null)
-    // 动态绑定 ref
-    useEffect(() => {
-        if (rowRef.current) {
-            drop(rowRef.current)
-        }
-    }, [drop])
+    const hasChild = children && children.length > 0
 
     useScroll(
         () => {
@@ -29,18 +19,15 @@ const Row: React.FC<CommonComponentProps> = (props) => {
     )
 
     return (
-        <ComponentPageItem {...{...props, isContainer: true}}>
+        <ComponentPageItem {...{...props, isContainer: true, hasChild}}>
             <div
                 ref={rowRef}
-                data-component-id={_id}
-                className='relative'
                 style={{
                     display: 'flex',
                     overflowX: 'auto'
                 }}
             >
-                {isOver && <CanDrop />}
-                {children && children.length ? children : <Empty _id={_id} />}
+                {children}
             </div>
         </ComponentPageItem>
     )
