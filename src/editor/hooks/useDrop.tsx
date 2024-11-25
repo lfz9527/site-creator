@@ -8,7 +8,7 @@ const useDrop = (id: string, componentName: string) => {
             accept: getAcceptDrop(componentName),
             drop: (_, monitor) => {
                 const didDrop = monitor.didDrop()
-                console.log('didDrop', didDrop)
+                console.log('didDrop', didDrop, id)
 
                 if (didDrop) {
                     return
@@ -30,8 +30,8 @@ const useDrop = (id: string, componentName: string) => {
     return {
         drop,
         canDrop,
-        isOverCurrent,
-        isOver
+        isOver,
+        isOverCurrent
     }
 }
 

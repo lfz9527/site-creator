@@ -7,8 +7,7 @@ const Col: React.FC<CommonComponentProps> = (props) => {
     const hasChild = children && children.length > 0
 
     const comPageStyle = {
-        width: '100%',
-        height: '200px'
+        width: '100%'
     }
 
     return (
