@@ -15,8 +15,13 @@ const useDrop = (id: string, componentName: string) => {
                 id
             }
         },
+        hover: (item, monitor) => {
+            console.log(monitor.isOver({shallow: true}), id)
+            console.log('---', monitor.getItem(), item)
+            console.log(monitor.getItemType())
+        },
         collect: (monitor) => ({
-            isOver: monitor.isOver(),
+            isOver: monitor.isOver({shallow: true}),
             canDrop: monitor.canDrop()
         })
     }))

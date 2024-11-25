@@ -13,8 +13,7 @@ const Stage: React.FC = () => {
     const maskRef = useRef(null)
     const {curComponentId} = useComponents()
     const {setStageWidth} = useStageConfig()
-    const {hoverComponentId, containerClassName, maskDiv} =
-        useStageMask(maskRef)
+    const {hoverComponentId, maskContainerRef, maskDiv} = useStageMask(maskRef)
 
     const [wh, setWh] = useState({
         width: '100%',
@@ -59,7 +58,7 @@ const Stage: React.FC = () => {
             }}
         >
             <div
-                className='absolute top-0 left-0 right-0 overflow-y-auto'
+                className='absolute top-0 left-0 right-0 overflow-x-hidden overflow-y-auto'
                 id={stageComLayoutId}
                 ref={comLayoutRef}
                 style={{
@@ -74,13 +73,13 @@ const Stage: React.FC = () => {
             {curComponentId && (
                 <SelectedMask
                     componentId={curComponentId}
-                    containerClassName={containerClassName}
+                    maskContainerRef={maskContainerRef}
                     ref={maskRef}
                 />
             )}
             {hoverComponentId && (
                 <HoverMask
-                    containerClassName={containerClassName}
+                    maskContainerRef={maskContainerRef}
                     ref={maskRef}
                     componentId={hoverComponentId}
                 />

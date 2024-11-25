@@ -4,8 +4,8 @@ import {logger} from './loggerMiddleware'
 import {persist, createJSONStorage, devtools} from 'zustand/middleware'
 import {
     getComponentById,
-    findNodeAndParent,
-    delComponentById
+    findNodeAndParent
+    // delComponentById
 } from '@editor/utils'
 
 interface State {

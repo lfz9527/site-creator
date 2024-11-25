@@ -34,7 +34,6 @@ const ComponentPageItem: React.FC<Props> = (props) => {
 
     return (
         <div
-            onDragOver={(e) => e.preventDefault()}
             ref={(node) => drag(drop(node))}
             style={styles}
             className='relative'

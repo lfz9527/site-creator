@@ -21,7 +21,7 @@ const Page: React.FC<CommonComponentProps> = (props) => {
         <div
             ref={drop}
             static-type='root-page'
-            className='w-full h-full bg-white'
+            className='w-full h-full overflow-x-hidden bg-white'
             style={{
                 transition: 'width 0.1s ease',
                 backgroundColor: showHover() ? '#f5fafe' : '#fff'

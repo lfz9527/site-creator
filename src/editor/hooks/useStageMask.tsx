@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useRef} from 'react'
 import {stageContainerId} from '@editor/enum'
 import {useComponents} from '@editor/stores'
 
@@ -15,6 +15,10 @@ interface CustomHTMLDivElement extends HTMLDivElement {
 const useStageMask = (maskRef: React.RefObject<CustomHTMLDivElement>) => {
     const {setCurComponentId, curComponentId, components} = useComponents()
     const [hoverComponentId, setHoverComponentId] = useState()
+    const maskContainerRef = useRef<HTMLDivElement>(null)
+    const maskDiv = () => (
+        <div ref={maskContainerRef} className={containerClassName} />
+    )
 
     // 点击事件遮罩
     useEffect(() => {
@@ -101,7 +105,8 @@ const useStageMask = (maskRef: React.RefObject<CustomHTMLDivElement>) => {
     return {
         hoverComponentId,
         containerClassName,
-        maskDiv: () => <div className={containerClassName} />
+        maskContainerRef,
+        maskDiv
     }
 }
 

@@ -16,12 +16,12 @@ import MaskTag from './mask-tag'
 interface Props {
     // 组件id
     componentId: string
-    // 容器class
-    containerClassName: string
+    // 容器的ref
+    maskContainerRef: React.RefObject<HTMLDivElement>
 }
 
 const Hover = forwardRef<HTMLDivElement, Omit<Props, 'ref'>>((props, ref) => {
-    const {componentId, containerClassName} = props
+    const {componentId, maskContainerRef} = props
     const toolRef = useRef<HTMLDivElement>(null)
     const {componentConfig} = useComponentConfigStore()
     const {components} = useComponents()
@@ -43,9 +43,6 @@ const Hover = forwardRef<HTMLDivElement, Omit<Props, 'ref'>>((props, ref) => {
 
     const curComponentConfig = componentConfig[focusCom?.name || '']
     const {isRoot, description, name} = curComponentConfig
-
-    // 获取 mask 容器
-    const maskContainer = document.querySelector(`.${containerClassName}`)
 
     // 对外暴露更新位置方法
     // @ts-ignore
@@ -115,7 +112,7 @@ const Hover = forwardRef<HTMLDivElement, Omit<Props, 'ref'>>((props, ref) => {
                 </div>
             </div>
         </>,
-        maskContainer!
+        maskContainerRef.current!
     )
 })
 

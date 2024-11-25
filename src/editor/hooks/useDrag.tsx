@@ -36,9 +36,6 @@ const useDrag = (
             if (direct) {
                 targetId = option.id.replace(/-vertical|-horizontal/, '')
             }
-
-            console.log('targetId', targetId, id)
-
             const insert = insertComponent(targetId, id, direct)
 
             onDragEnd && onDragEnd(insert)
