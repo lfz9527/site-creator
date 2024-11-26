@@ -2,7 +2,7 @@ import {CommonComponentProps} from '@editor/interface'
 import {useDrag, useDrop} from '@editor/hooks'
 import Empty from '@/editor/common/empty'
 import {message} from 'antd'
-
+import CanDrop from './canDrop'
 import React from 'react'
 
 type PageItemType = {
@@ -25,7 +25,7 @@ const ComponentPageItem: React.FC<Props> = (props) => {
         hasChild = false
     } = props
     const [messageApi, contextHolder] = message.useMessage()
-    const {drop, isOverCurrent, isOver} = useDrop(_id, _name)
+    const {drop, isOverCurrent} = useDrop(_id, _name)
     const {drag} = useDrag(_id, _name, (insert) => {
         !insert &&
             messageApi.open({
@@ -36,10 +36,11 @@ const ComponentPageItem: React.FC<Props> = (props) => {
 
     const styles = {
         display: isContainer ? 'block' : 'inline-block',
+        position: 'relative',
         ...comPageStyle
     }
 
-    const isCover = !!(isOverCurrent || isOver)
+    const isCover = !!isOverCurrent
 
     return (
         <div
@@ -49,7 +50,8 @@ const ComponentPageItem: React.FC<Props> = (props) => {
             data-component-id={_id}
         >
             {contextHolder}
-            {hasChild ? children : <Empty _id={_id} isCover={isCover} />}
+            {isCover && <CanDrop />}
+            {hasChild ? children : <Empty _id={_id} />}
         </div>
     )
 }

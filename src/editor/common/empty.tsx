@@ -1,6 +1,6 @@
 interface EmptyProps {
     _id?: string
-    isCover: boolean
+    isCover?: boolean
 }
 const Empty: React.FC<EmptyProps> = ({_id, isCover = false}) => {
     const style = {
