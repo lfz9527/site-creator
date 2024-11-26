@@ -221,7 +221,7 @@ const useComponents = create<State & Action>()(
                 }),
                 {
                     name: 'useComponents',
-                    storage: createJSONStorage(() => localStorage)
+                    storage: createJSONStorage(() => sessionStorage)
                 }
             ),
             {name: 'useComponents'}

@@ -11,7 +11,7 @@ const Stage: React.FC = () => {
     const wrapRef = useRef<HTMLDivElement>(null)
     const comLayoutRef = useRef<HTMLDivElement>(null)
     const maskRef = useRef(null)
-    const {curComponentId} = useComponents()
+    const {curComponentId, setCurComponentId} = useComponents()
     const {setStageWidth} = useStageConfig()
     const {hoverComponentId, maskContainerRef, maskDiv} = useStageMask(maskRef)
 
@@ -36,6 +36,8 @@ const Stage: React.FC = () => {
 
     // 监听画布容器变化
     useObserve(() => {
+        // 画布容器变化时，清空选中状态
+        setCurComponentId(null)
         initWH()
     })
     useEffect(() => {
@@ -43,27 +45,18 @@ const Stage: React.FC = () => {
         setStageWidth(wrapRef.current?.offsetWidth || '100%')
     }, [])
 
-    // 动画
-    const tranStyle = {
-        transition: 'width 0.2s ease-in-out' // 添加过渡效果
-    }
-
     return (
         <div
             ref={wrapRef}
             id={stageContainerId}
             className='relative w-full h-full overflow-hidden bg-white'
-            style={{
-                ...tranStyle
-            }}
         >
             <div
                 className='absolute top-0 left-0 right-0 overflow-x-hidden overflow-y-auto'
                 id={stageComLayoutId}
                 ref={comLayoutRef}
                 style={{
-                    ...wh,
-                    ...tranStyle
+                    ...wh
                 }}
             >
                 <StageContainer />

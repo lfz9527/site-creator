@@ -103,6 +103,7 @@ const useStageMask = (maskRef: React.RefObject<CustomHTMLDivElement>) => {
     }, [components])
 
     return {
+        setHoverComponentId,
         hoverComponentId,
         containerClassName,
         maskContainerRef,
