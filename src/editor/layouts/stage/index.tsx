@@ -11,9 +11,10 @@ const Stage: React.FC = () => {
     const wrapRef = useRef<HTMLDivElement>(null)
     const comLayoutRef = useRef<HTMLDivElement>(null)
     const maskRef = useRef(null)
-    const {curComponentId, setCurComponentId} = useComponents()
+    const {curComponentId, setCurComponentId, hoverComponentId} =
+        useComponents()
     const {setStageWidth} = useStageConfig()
-    const {hoverComponentId, maskContainerRef, maskDiv} = useStageMask(maskRef)
+    const {maskContainerRef, maskDiv} = useStageMask(maskRef)
 
     const [wh, setWh] = useState({
         width: '100%',

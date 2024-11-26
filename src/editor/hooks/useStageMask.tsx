@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef} from 'react'
+import {useEffect, useRef} from 'react'
 import {stageContainerId} from '@editor/enum'
 import {useComponents} from '@editor/stores'
 
@@ -13,8 +13,8 @@ interface CustomHTMLDivElement extends HTMLDivElement {
 }
 
 const useStageMask = (maskRef: React.RefObject<CustomHTMLDivElement>) => {
-    const {setCurComponentId, curComponentId, components} = useComponents()
-    const [hoverComponentId, setHoverComponentId] = useState()
+    const {setCurComponentId, curComponentId, components, setHoverComponentId} =
+        useComponents()
     const maskContainerRef = useRef<HTMLDivElement>(null)
     const maskDiv = () => (
         <div ref={maskContainerRef} className={containerClassName} />
@@ -63,7 +63,7 @@ const useStageMask = (maskRef: React.RefObject<CustomHTMLDivElement>) => {
                     const componentId = ele.getAttribute(attribute)
                     if (componentId) {
                         if (curComponentId === componentId) {
-                            setHoverComponentId(undefined)
+                            setHoverComponentId(null)
                         } else {
                             setHoverComponentId(componentId)
                         }
@@ -73,7 +73,7 @@ const useStageMask = (maskRef: React.RefObject<CustomHTMLDivElement>) => {
             }
         }
         const removerMask = () => {
-            setHoverComponentId(undefined)
+            setHoverComponentId(null)
         }
 
         let container = getStageDom()
@@ -103,8 +103,6 @@ const useStageMask = (maskRef: React.RefObject<CustomHTMLDivElement>) => {
     }, [components])
 
     return {
-        setHoverComponentId,
-        hoverComponentId,
         containerClassName,
         maskContainerRef,
         maskDiv

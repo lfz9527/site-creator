@@ -11,6 +11,7 @@ import {
 interface State {
     components: Component[]
     curComponentId?: string | null
+    hoverComponentId?: string | null
     curComponent: Component | null
 }
 
@@ -34,6 +35,12 @@ interface Action {
      */
     setCurComponentId: (componentId: string | null) => void
 
+    /**
+     *
+     * @param componentId 悬浮组件id
+     * @returns
+     */
+    setHoverComponentId: (componentId: State['hoverComponentId']) => void
     /**
      * 删除组件
      * @param componentId
@@ -84,6 +91,10 @@ const useComponents = create<State & Action>()(
                                 components: [...state.components, component]
                             }
                         }),
+                    setHoverComponentId: (componentId) =>
+                        set(() => ({
+                            hoverComponentId: componentId
+                        })),
                     setCurComponentId: (componentId) =>
                         set((state) => ({
                             curComponentId: componentId,
