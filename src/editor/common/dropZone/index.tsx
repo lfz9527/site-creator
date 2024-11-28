@@ -8,7 +8,10 @@ interface DropZoneProps {
 }
 const DropZone: React.FC<DropZoneProps> = (props) => {
     const {direction, _id, _name} = props
-    const {isOver, drop} = useDrop(`${_id}-${direction}`, _name)
+    const {isOver, drop} = useDrop({
+        id: `${_id}-${direction}`,
+        componentName: _name
+    })
     const className = `drop-zone-${direction}`
 
     // console.log('isOver', isOver, _id)
@@ -16,7 +19,7 @@ const DropZone: React.FC<DropZoneProps> = (props) => {
     return (
         <div
             id='drop-zone'
-            ref={drop}
+            // ref={drop}
             className={`drop-zone ${className} ${isOver ? 'focus' : ''}`}
         ></div>
     )

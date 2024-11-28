@@ -20,12 +20,17 @@ interface ComponentItemProps {
 }
 
 const ComponentItem: React.FC<ComponentItemProps> = (props) => {
-    const {name, description, onDragEnd, icon, onDragStart} = props
+    const {name, description, onDragEnd, icon, onDragStart, comType} = props
+
+    console.log('props', props)
 
     const {componentConfig} = useComponentConfigStore()
 
     const [{isDragging}, drag] = useDrag({
         type: name,
+        item: {
+            name
+        },
         end: (_, monitor) => {
             const dropResult = monitor.getDropResult()
             if (!dropResult) return
@@ -38,6 +43,7 @@ const ComponentItem: React.FC<ComponentItemProps> = (props) => {
                 const option = {
                     name,
                     props,
+                    type: comType,
                     description,
                     ...dropResult
                 }

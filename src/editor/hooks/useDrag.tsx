@@ -7,6 +7,12 @@ const validDirect = (id: string): dropZoneType | null => {
     return direct as dropZoneType
 }
 
+interface Props {
+    id: string
+    componentName: string
+    onDragEnd?: (...args: any[]) => void
+}
+
 /**
  *
  * @param id
@@ -14,14 +20,15 @@ const validDirect = (id: string): dropZoneType | null => {
  * @param onDragEnd
  * @returns
  */
-const useDrag = (
-    id: string,
-    componentName: string,
-    onDragEnd?: (...args: any[]) => void
-) => {
+const useDrag = (props: Props) => {
+    const {id, componentName, onDragEnd} = props
     const {insertComponent} = useComponents()
     const [{isDragging, handlerId}, drag] = useDndDrag({
         type: componentName,
+        item: {
+            name: componentName,
+            id
+        },
         end: (_, monitor) => {
             const dropResult = monitor.getDropResult()
             if (!dropResult) return

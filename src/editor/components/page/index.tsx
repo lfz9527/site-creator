@@ -6,7 +6,10 @@ import {useComponents} from '@/editor/stores'
 const Page: React.FC<CommonComponentProps> = (props) => {
     const {setCurComponentId} = useComponents()
     const {children, _id, _name} = props
-    const {drop, canDrop} = useDrop(_id, _name)
+    const {drop, canDrop} = useDrop({
+        id: _id,
+        componentName: _name
+    })
 
     const showHover = () => canDrop && !(children && children.length > 0)
 

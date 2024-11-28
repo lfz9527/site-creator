@@ -51,6 +51,7 @@ const Material: React.FC = () => {
                 comMap.set(item.category, [item])
             }
         })
+
         const items: CollapseProps['items'] = []
         for (const [key, value] of comMap) {
             const col = {
