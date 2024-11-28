@@ -5,11 +5,13 @@ import {getAcceptDrop} from '@editor/utils'
 interface Props {
     id: string
     componentName: string
-    onHover?: (_: any, monitor: DropTargetMonitor) => void
+    onHover?: (_: any, monitor: DropTargetMonitor) => insertPositionType
 }
 
 const useDrop = (props: Props) => {
     const {id, componentName, onHover} = props
+    let position: insertPositionType = 'center'
+
     const [{canDrop, isOverCurrent, isOver}, drop] = useDndDrop(
         {
             accept: getAcceptDrop(componentName),
@@ -18,13 +20,15 @@ const useDrop = (props: Props) => {
                 if (didDrop) {
                     return
                 }
+
                 // 这里把当前组件的id返回出去，在拖拽结束事件里可以拿到这个id。
                 return {
-                    id
+                    id,
+                    insertPosition: position
                 }
             },
             hover: (_, monitor: DropTargetMonitor) => {
-                onHover && onHover(_, monitor)
+                if (onHover) position = onHover(_, monitor)
             },
             collect: (monitor: DropTargetMonitor) => ({
                 isOverCurrent: monitor.isOver({shallow: true}),

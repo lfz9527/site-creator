@@ -5,6 +5,4 @@ type observeOpt = {
     htmlStr?: HTMLElement
 }
 
-type dropZoneType = 'horizontal' | 'vertical'
-
-type insertPositionType = 'top' | 'left' | 'right' | 'bottom'
+type insertPositionType = 'top' | 'left' | 'right' | 'bottom' | 'center'

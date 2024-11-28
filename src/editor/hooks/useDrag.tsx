@@ -1,16 +1,10 @@
 import {useDrag as useDndDrag} from 'react-dnd'
 import {useComponents} from '@editor/stores'
 
-const validDirect = (id: string): dropZoneType | null => {
-    const [, direct] = id?.split('-') || []
-    if (!direct) return null
-    return direct as dropZoneType
-}
-
 interface Props {
     id: string
     componentName: string
-    onDragEnd?: (...args: any[]) => void
+    onDragEndState?: (...args: any[]) => void
 }
 
 /**
@@ -21,7 +15,7 @@ interface Props {
  * @returns
  */
 const useDrag = (props: Props) => {
-    const {id, componentName, onDragEnd} = props
+    const {id, componentName, onDragEndState} = props
     const {insertComponent} = useComponents()
     const [{isDragging, handlerId}, drag] = useDndDrag({
         type: componentName,
@@ -36,16 +30,9 @@ const useDrag = (props: Props) => {
                 id: string
                 [key: string]: any
             } = {id: '', ...dropResult}
+            const insert = insertComponent(option.id, id, option.insertPosition)
 
-            const direct = validDirect(option.id)
-            let targetId = option.id
-
-            if (direct) {
-                targetId = option.id.replace(/-vertical|-horizontal/, '')
-            }
-            const insert = insertComponent(targetId, id, direct)
-
-            onDragEnd && onDragEnd(insert)
+            onDragEndState && onDragEndState(insert)
         },
         collect: (monitor) => ({
             // 是否正在拖拽

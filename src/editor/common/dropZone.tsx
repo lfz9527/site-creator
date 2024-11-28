@@ -1,16 +1,17 @@
 import React from 'react'
 
 interface DropZoneProps {
-    style?: React.CSSProperties
+    zoneStyle?: React.CSSProperties
 }
 const DropZone: React.FC<DropZoneProps> = (props) => {
-    const {style} = props
+    const {zoneStyle} = props
 
     return (
         <div
             id='drop-zone'
             style={{
-                ...style
+                backgroundColor: 'var(--edit-primary-color)',
+                ...zoneStyle
             }}
         ></div>
     )

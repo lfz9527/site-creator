@@ -25,8 +25,6 @@ const Material: React.FC = () => {
             type: dropResult.type,
             description: dropResult.description
         }
-        console.log('component', component)
-
         addComponent(component, dropResult.id)
     }
 

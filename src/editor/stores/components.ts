@@ -56,7 +56,7 @@ interface Action {
     insertComponent: (
         targetId: string,
         curComponentId: string,
-        moveType?: dropZoneType | null
+        insertPosition?: insertPositionType | null
     ) => boolean
 }
 
@@ -132,7 +132,11 @@ const useComponents = create<State & Action>()(
                         }
                         return true
                     },
-                    insertComponent: (targetId, curComponentId, moveType) => {
+                    insertComponent: (
+                        targetId,
+                        curComponentId,
+                        insertPosition
+                    ) => {
                         let bool = true
                         set(() => {
                             const components = JSON.parse(
@@ -183,39 +187,44 @@ const useComponents = create<State & Action>()(
                             console.log('targetCom', targetCom)
                             console.log('targetParentCom', targetParentCom)
 
-                            console.log('moveType', moveType)
+                            console.log('insertPosition', insertPosition)
 
-                            if (moveType === 'horizontal') {
-                                // 行移动
-                                curCom.parentId = targetParentCom.id
+                            switch (insertPosition) {
+                                case 'left':
+                                    // 层级嵌套
+                                    curCom.parentId = targetCom.id
+                                    if (!targetCom.children) {
+                                        targetCom.children = []
+                                    }
+                                    targetCom.children.push(curCom)
+                                    break
 
-                                if (!targetParentCom.children) {
-                                    targetParentCom.children = []
-                                }
-                                const targetIndex =
-                                    targetParentCom.children.findIndex(
-                                        (child) => child.id === targetId
-                                    )
-
-                                if (targetIndex === -1) {
-                                    targetParentCom.children.push(curCom)
-                                } else {
-                                    targetParentCom.children.splice(
-                                        targetIndex,
-                                        0,
-                                        curCom
-                                    )
-                                }
-                            } else if (moveType === 'vertical') {
-                                // 列移动
-                            } else {
-                                // 层级嵌套
-                                curCom.parentId = targetCom.id
-                                if (!targetCom.children) {
-                                    targetCom.children = []
-                                }
-                                targetCom.children.push(curCom)
+                                default:
+                                    break
                             }
+
+                            // if (moveType === 'horizontal') {
+                            //     // 行移动
+                            //     curCom.parentId = targetParentCom.id
+
+                            //     if (!targetParentCom.children) {
+                            //         targetParentCom.children = []
+                            //     }
+                            //     const targetIndex =
+                            //         targetParentCom.children.findIndex(
+                            //             (child) => child.id === targetId
+                            //         )
+
+                            //     if (targetIndex === -1) {
+                            //         targetParentCom.children.push(curCom)
+                            //     } else {
+                            //         targetParentCom.children.splice(
+                            //             targetIndex,
+                            //             0,
+                            //             curCom
+                            //         )
+                            //     }
+                            // }
                             return {
                                 components
                             }
