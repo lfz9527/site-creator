@@ -1,10 +1,9 @@
 import {CommonComponentProps} from '@editor/interface'
-import {DropTargetMonitor} from 'react-dnd'
 import {useDrag, useDrop} from '@editor/hooks'
-import Empty from '@/editor/common/empty'
+import Empty from './empty'
 import {message} from 'antd'
 import CanDrop from './canDrop'
-import React, {useRef, useState, useCallback} from 'react'
+import React, {useRef, useCallback} from 'react'
 
 type PageItemType = {
     isContainer?: boolean
@@ -28,8 +27,6 @@ const ComponentPageItem: React.FC<Props> = (props) => {
     const [messageApi, contextHolder] = message.useMessage()
     // 使用 useRef 创建一个可变的引用
     const comRef = useRef<HTMLElement | null>(null)
-    const [lightLf, setLightLf] = useState(false)
-    const [lightRt, setLightRt] = useState(false)
     const {drag} = useDrag({
         id: _id,
         componentName: _name,
@@ -43,13 +40,8 @@ const ComponentPageItem: React.FC<Props> = (props) => {
     })
     const {drop, isOverCurrent} = useDrop({
         id: _id,
-        componentName: _name,
-        onHover: dropHover
+        componentName: _name
     })
-
-    function dropHover(_: any, monitor: DropTargetMonitor) {
-        if (!monitor.canDrop()) return
-    }
 
     const handleRef = useCallback(
         (node: HTMLElement | null) => {
@@ -72,32 +64,6 @@ const ComponentPageItem: React.FC<Props> = (props) => {
     return (
         <div ref={handleRef} style={styles} data-component-id={_id}>
             {contextHolder}
-            {/* B左边高亮区域 */}
-            {lightLf && (
-                <div
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '200px',
-                        height: '100%',
-                        backgroundColor: 'rgba(0, 255, 0, 0.3)'
-                    }}
-                />
-            )}
-            {/* B右边高亮区域 */}
-            {lightRt && (
-                <div
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: '150px',
-                        width: '350px',
-                        height: '100%',
-                        backgroundColor: 'rgba(255, 0, 0, 0.3)'
-                    }}
-                />
-            )}
             {isCover && <CanDrop />}
             {hasChild ? children : <Empty _id={_id} />}
         </div>

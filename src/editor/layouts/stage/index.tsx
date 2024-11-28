@@ -52,18 +52,6 @@ const Stage: React.FC = () => {
             id={stageContainerId}
             className='relative w-full h-full overflow-hidden bg-white'
         >
-            <div
-                className='absolute top-0 left-0 right-0 overflow-x-hidden overflow-y-auto'
-                id={stageComLayoutId}
-                ref={comLayoutRef}
-                style={{
-                    ...wh
-                }}
-            >
-                <StageContainer />
-                {maskDiv()}
-            </div>
-
             {curComponentId && (
                 <SelectedMask
                     componentId={curComponentId}
@@ -78,6 +66,17 @@ const Stage: React.FC = () => {
                     componentId={hoverComponentId}
                 />
             )}
+            <div
+                className='absolute top-0 left-0 right-0 overflow-x-hidden overflow-y-auto'
+                id={stageComLayoutId}
+                ref={comLayoutRef}
+                style={{
+                    ...wh
+                }}
+            >
+                {maskDiv()}
+                <StageContainer />
+            </div>
         </div>
     )
 }

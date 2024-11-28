@@ -23,8 +23,9 @@ const Row: React.FC<CommonComponentProps> = (props) => {
             <div
                 ref={rowRef}
                 style={{
-                    display: 'flex',
-                    overflowX: 'auto'
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(2, minmax(0px, 1fr))',
+                    gap: 10
                 }}
             >
                 {children}

@@ -27,7 +27,7 @@ interface Action {
      * @param parentId 父组件id
      * @returns
      */
-    addComponent: (component: Component, parentId?: string) => void
+    addComponent: (component: Component, parentId?: string | null) => void
     /**
      * 设置当前组件Id
      * @param componentId 当前组件id

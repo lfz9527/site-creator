@@ -99,7 +99,7 @@ const Hover = forwardRef<HTMLDivElement, Omit<Props, 'ref'>>((props, ref) => {
     return createPortal(
         <>
             <div
-                className='absolute bg-[rgba(66,133,244,0.04)] border-2 border-dashed border-[var(--edit-primary-color)] pointer-events-none z-[120] rounded-[4px] box-border'
+                className='absolute bg-[rgba(66,133,244,0.04)] border-[1px] border-dashed border-[var(--edit-primary-color)] pointer-events-none z-[120] rounded-[4px] box-border'
                 style={maskPos}
             />
             <div

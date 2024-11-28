@@ -10,6 +10,6 @@ export default (ctx: Context) => {
         allowDrag: [ItemType.Page, ItemType.Row],
         component: TestCom,
         comType: 'static',
-        category: 'basic'
+        category: 'remote'
     })
 }

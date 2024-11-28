@@ -1,4 +1,4 @@
-import {createElement} from 'react'
+import {createElement, useMemo} from 'react'
 import {useComponents, useComponentConfigStore} from '@editor/stores'
 import {Component, defaultProps} from '@editor/interface'
 
@@ -41,7 +41,10 @@ const StageContainer = () => {
         })
     }
 
-    return renderComponents(components)
+    return useMemo(
+        () => renderComponents(components),
+        [components, componentConfig]
+    )
 }
 
 export default StageContainer

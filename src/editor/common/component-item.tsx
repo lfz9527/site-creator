@@ -1,8 +1,8 @@
 import {useDrag} from 'react-dnd'
 import {ComType} from '@editor/interface'
 import SvgIcon from './svg-icon'
-import React from 'react'
-import {useComponentConfigStore} from '@editor/stores'
+import React, {useEffect, useMemo} from 'react'
+import {useComponentConfigStore, useComponents} from '@editor/stores'
 
 interface ComponentItemProps {
     // 组件名称
@@ -17,14 +17,19 @@ interface ComponentItemProps {
     icon?: string
     // 组件类型
     comType: ComType
+    [key: string]: any
 }
 
 const ComponentItem: React.FC<ComponentItemProps> = (props) => {
     const {name, description, onDragEnd, icon, onDragStart, comType} = props
-
-    console.log('props', props)
-
+    const {curComponentId, components} = useComponents()
     const {componentConfig} = useComponentConfigStore()
+
+    // 使用 useMemo 来缓存 componentConfig 中的属性，避免每次渲染都重新计算
+    const defaultProps = useMemo(
+        () => componentConfig?.[name]?.defaultProps || [],
+        [componentConfig, name]
+    )
 
     const [{isDragging}, drag] = useDrag({
         type: name,
@@ -35,20 +40,17 @@ const ComponentItem: React.FC<ComponentItemProps> = (props) => {
             const dropResult = monitor.getDropResult()
             if (!dropResult) return
 
-            const defaultProps = componentConfig?.[name]?.defaultProps || []
-
-            const props: any = [...defaultProps]
-
             if (onDragEnd) {
-                const option = {
+                const dragOptions = {
                     name,
-                    props,
+                    props: [...defaultProps],
                     type: comType,
                     description,
                     ...dropResult
                 }
+
                 // 拖拽结束回调
-                onDragEnd(option)
+                onDragEnd(dragOptions)
             }
         },
         collect: (monitor) => ({
@@ -59,23 +61,38 @@ const ComponentItem: React.FC<ComponentItemProps> = (props) => {
         })
     })
 
-    if (isDragging) {
-        onDragStart()
+    useEffect(() => {
+        if (isDragging && onDragStart) {
+            onDragStart()
+        }
+    }, [isDragging, onDragStart])
+
+    const clickAddComponent = () => {
+        const dragOptions = {
+            name,
+            props: [...defaultProps],
+            type: comType,
+            description,
+            id: curComponentId ? curComponentId : components[0].id
+        }
+        onDragEnd(dragOptions)
     }
 
+    // 点击组件进行添加
     return (
         <div
             ref={drag}
-            className='component-item h-[100px] bg-white cursor-move py-[8px] px-[20px] flex justify-center items-center flex-col gap-[10px] hover:drop-shadow-lg border-[1px]'
+            onClick={clickAddComponent}
+            className='flex items-center gap-2 h-[36px] bg-white px-2  border-[1px] border-solid border-[#e5e6e8] rounded-md cursor-grab hover:border-[#0089ff] hover:text-[#0089ff]  hover:fill-[#0089ff] '
         >
             <SvgIcon
                 name={icon ? icon : 'component-default-icon'}
                 iconStyle={{
-                    width: 20,
-                    height: 20
+                    width: 14,
+                    height: 14
                 }}
             />
-            <p className='text-center'>{description}</p>
+            <p className='text-xs text-center '>{description}</p>
         </div>
     )
 }
