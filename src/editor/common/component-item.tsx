@@ -67,6 +67,7 @@ const ComponentItem: React.FC<ComponentItemProps> = (props) => {
         }
     }, [isDragging, onDragStart])
 
+    // 点击组件进行添加
     const clickAddComponent = () => {
         const dragOptions = {
             name,
