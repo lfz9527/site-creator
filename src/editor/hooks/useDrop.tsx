@@ -11,7 +11,6 @@ interface Props {
 const useDrop = (props: Props) => {
     const {id, componentName, onHover} = props
     let position: insertPositionType = 'center'
-
     const [{canDrop, isOverCurrent, isOver}, drop] = useDndDrop(
         {
             accept: getAcceptDrop(componentName),
